@@ -18,6 +18,9 @@ const Renderer = (() => {
         barChart.innerHTML = '';
 
         arr.forEach((val, i) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bar-wrapper';
+
             const bar = document.createElement('div');
             const state = states[String(i)] || 'default';
             const pct = (val / maxVal) * 100;
@@ -29,7 +32,17 @@ const Renderer = (() => {
                 bar.setAttribute('data-value', val);
             }
 
-            barChart.appendChild(bar);
+            wrapper.appendChild(bar);
+
+            // Index label below bar
+            if (arr.length <= 30) {
+                const idx = document.createElement('div');
+                idx.className = 'bar-index';
+                idx.textContent = i;
+                wrapper.appendChild(idx);
+            }
+
+            barChart.appendChild(wrapper);
         });
     }
 

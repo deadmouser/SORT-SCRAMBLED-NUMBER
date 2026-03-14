@@ -51,7 +51,7 @@ def generate_steps(arr):
                         "unsorted": [0, n - 1 - i]
                     }
                 },
-                "message": f"Comparing arr[{j}]={a[j]} and arr[{j + 1}]={a[j + 1]}",
+                "message": f"Pass {i+1}: Comparing {a[j]} and {a[j+1]} — {'need to swap!' if a[j] > a[j+1] else 'already in order.'}",
                 "operation": "compare",
                 "stats": {**stats}
             })
@@ -79,7 +79,7 @@ def generate_steps(arr):
                             "unsorted": [0, n - 1 - i]
                         }
                     },
-                    "message": f"Swapped arr[{j}]={a[j]} and arr[{j + 1}]={a[j + 1]}",
+                    "message": f"Pass {i+1}: Swapped {a[j]} ↔ {a[j+1]} — the larger value bubbles right.",
                     "operation": "swap",
                     "stats": {**stats}
                 })
