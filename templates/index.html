@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sort Scramble -- Sorting Algorithm Visualizer</title>
+    <title>Sort Scramble — Sorting Algorithm Visualizer</title>
     <meta name="description" content="Visualize 6 sorting algorithms step-by-step with live data structure panels. Built for DSA Hackathon.">
     <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg">
     <link rel="stylesheet" href="/static/css/main.css">
@@ -32,17 +32,17 @@
                 <button class="algo-btn active" data-algo="bubble">
                     <span class="algo-btn-icon">01</span>
                     <span class="algo-btn-name">Bubble Sort</span>
-                    <span class="algo-btn-tag">O(n2)</span>
+                    <span class="algo-btn-tag">O(n²)</span>
                 </button>
                 <button class="algo-btn" data-algo="selection">
                     <span class="algo-btn-icon">02</span>
                     <span class="algo-btn-name">Selection Sort</span>
-                    <span class="algo-btn-tag">O(n2)</span>
+                    <span class="algo-btn-tag">O(n²)</span>
                 </button>
                 <button class="algo-btn" data-algo="insertion">
                     <span class="algo-btn-icon">03</span>
                     <span class="algo-btn-name">Insertion Sort</span>
-                    <span class="algo-btn-tag">O(n2)</span>
+                    <span class="algo-btn-tag">O(n²)</span>
                 </button>
                 <button class="algo-btn" data-algo="merge">
                     <span class="algo-btn-icon">04</span>
@@ -72,11 +72,11 @@
                 </div>
                 <div class="info-row">
                     <span class="info-key">Average</span>
-                    <span class="info-val" id="info-avg">O(n2)</span>
+                    <span class="info-val" id="info-avg">O(n²)</span>
                 </div>
                 <div class="info-row">
                     <span class="info-key">Worst</span>
-                    <span class="info-val" id="info-worst">O(n2)</span>
+                    <span class="info-val" id="info-worst">O(n²)</span>
                 </div>
                 <div class="info-row info-row--highlight">
                     <span class="info-key">Space</span>
@@ -110,9 +110,9 @@
                         Random
                     </button>
                     <div class="size-control">
-                        <label for="size-slider" class="size-label">Size</label>
+                        <label for="size-slider" class="size-label">Array Size</label>
                         <input type="range" id="size-slider" min="5" max="50" value="15" class="slider">
-                        <span class="size-value" id="size-value">15</span>
+                        <input type="number" id="size-value" class="size-input" value="15" min="5" max="50" step="1">
                     </div>
                 </div>
                 <!-- Preset Arrays -->
@@ -125,47 +125,9 @@
             </div>
         </div>
 
-        <!-- Speed Control -->
-        <div class="sidebar-section">
-            <div class="section-label">Animation Speed</div>
-            <div class="speed-control">
-                <span class="speed-label">Slow</span>
-                <input type="range" id="speed-slider" min="1" max="100" value="50" class="slider slider--speed">
-                <span class="speed-label">Fast</span>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="sidebar-section">
-            <div class="section-label">Live Statistics</div>
-            <div class="stats-grid">
-                <div class="stat-card stat-card--compare">
-                    <span class="stat-num" id="stat-comparisons">0</span>
-                    <span class="stat-label">Comparisons</span>
-                </div>
-                <div class="stat-card stat-card--swap">
-                    <span class="stat-num" id="stat-swaps">0</span>
-                    <span class="stat-label">Swaps</span>
-                </div>
-                <div class="stat-card stat-card--step">
-                    <span class="stat-num" id="stat-step">0 / 0</span>
-                    <span class="stat-label">Step</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Color Legend -->
-        <div class="sidebar-section">
-            <div class="section-label">Color Legend</div>
-            <div class="legend-grid">
-                <div class="legend-item"><span class="legend-swatch swatch--default"></span>Default</div>
-                <div class="legend-item"><span class="legend-swatch swatch--comparing"></span>Comparing</div>
-                <div class="legend-item"><span class="legend-swatch swatch--swapping"></span>Swapping</div>
-                <div class="legend-item"><span class="legend-swatch swatch--sorted"></span>Sorted</div>
-                <div class="legend-item"><span class="legend-swatch swatch--pivot"></span>Pivot</div>
-                <div class="legend-item"><span class="legend-swatch swatch--selected"></span>Selected</div>
-                <div class="legend-item"><span class="legend-swatch swatch--bucket"></span>Bucket</div>
-            </div>
+        <!-- Sidebar Footer (branding) -->
+        <div class="sidebar-footer">
+            <span class="sidebar-footer-text">DSA Hackathon 2026</span>
         </div>
     </aside>
 
@@ -183,20 +145,20 @@
             </div>
         </header>
 
-        <!-- Transport Controls -->
+        <!-- Transport Controls + Stats + Speed (ALL IN ONE BAR) -->
         <div class="transport-bar">
             <div class="transport-buttons">
                 <button class="transport-btn" id="btn-reset" title="Reset (R)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                 </button>
-                <button class="transport-btn" id="btn-step-back" title="Step Back (Left Arrow)">
+                <button class="transport-btn" id="btn-step-back" title="Step Back (←)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20L9 12l10-8v16z"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
                 </button>
                 <button class="transport-btn transport-play" id="btn-play" title="Play/Pause (Space)">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="play-icon"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="pause-icon" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                 </button>
-                <button class="transport-btn" id="btn-step-fwd" title="Step Forward (Right Arrow)">
+                <button class="transport-btn" id="btn-step-fwd" title="Step Forward (→)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
                 </button>
                 <button class="sort-btn" id="btn-sort" title="Sort (Enter)">
@@ -204,6 +166,31 @@
                     SORT
                 </button>
             </div>
+
+            <!-- Inline Stats -->
+            <div class="inline-stats">
+                <div class="inline-stat">
+                    <span class="inline-stat-label">Comparisons</span>
+                    <span class="inline-stat-val" id="stat-comparisons">0</span>
+                </div>
+                <div class="inline-stat">
+                    <span class="inline-stat-label">Swaps</span>
+                    <span class="inline-stat-val" id="stat-swaps">0</span>
+                </div>
+                <div class="inline-stat">
+                    <span class="inline-stat-label">Step</span>
+                    <span class="inline-stat-val" id="stat-step">0 / 0</span>
+                </div>
+            </div>
+
+            <!-- Inline Speed -->
+            <div class="inline-speed">
+                <span class="speed-tag">Sorting Speed</span>
+                <span class="speed-end-label">Slow</span>
+                <input type="range" id="speed-slider" min="1" max="100" value="50" class="slider slider--speed slider--inline" title="Animation Speed">
+                <span class="speed-end-label">Fast</span>
+            </div>
+
             <!-- Progress Bar -->
             <div class="progress-track" id="progress-track">
                 <div class="progress-fill" id="progress-fill"></div>
@@ -228,9 +215,20 @@
             </div>
         </div>
 
-        <!-- Message Bar -->
-        <div class="message-bar" id="message-bar">
-            Select an algorithm and click SORT to begin.
+        <!-- Bottom Bar: Message + Color Legend -->
+        <div class="bottom-bar">
+            <div class="message-bar" id="message-bar">
+                Select an algorithm and click SORT to begin.
+            </div>
+            <div class="legend-inline">
+                <div class="legend-item"><span class="legend-swatch swatch--default"></span>Default</div>
+                <div class="legend-item"><span class="legend-swatch swatch--comparing"></span>Comparing</div>
+                <div class="legend-item"><span class="legend-swatch swatch--swapping"></span>Swapping</div>
+                <div class="legend-item"><span class="legend-swatch swatch--sorted"></span>Sorted</div>
+                <div class="legend-item"><span class="legend-swatch swatch--pivot"></span>Pivot</div>
+                <div class="legend-item"><span class="legend-swatch swatch--selected"></span>Selected</div>
+                <div class="legend-item"><span class="legend-swatch swatch--bucket"></span>Bucket</div>
+            </div>
         </div>
     </main>
 

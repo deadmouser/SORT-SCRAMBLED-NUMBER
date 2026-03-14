@@ -172,8 +172,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    padding: var(--sp-5);
-    gap: var(--sp-5);
+    padding: var(--sp-4);
+    gap: var(--sp-3);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -744,12 +744,13 @@ body {
 }
 
 /* ═════════════════════════════════════════════════════
-   TRANSPORT BAR
+   TRANSPORT BAR (with inline stats + speed)
    ═════════════════════════════════════════════════════ */
 .transport-bar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--sp-4);
+    gap: var(--sp-3);
     padding: var(--sp-3) var(--sp-6);
     background: var(--bg-surface);
     border-bottom: 1px solid var(--border-subtle);
@@ -852,10 +853,113 @@ body {
     transform: translateY(0);
 }
 
+/* ── Inline Stats (in transport bar) ─────────────────── */
+.inline-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin-left: auto;
+}
+
+.inline-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 4px 12px;
+    min-width: 70px;
+}
+
+.inline-stat-label {
+    font-size: 9px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.inline-stat-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+/* Color-coded stat values */
+.inline-stat:nth-child(1) .inline-stat-val { color: #FCA5A5; }
+.inline-stat:nth-child(2) .inline-stat-val { color: #FCD34D; }
+.inline-stat:nth-child(3) .inline-stat-val { color: #A5B4FC; }
+
+/* ── Inline Speed (in transport bar) ─────────────────── */
+.inline-speed {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 6px 14px;
+}
+
+.speed-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+
+.speed-end-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.slider--inline {
+    width: 100px;
+}
+
+/* ── Size Input (editable number) ─────────────────────── */
+.size-input {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: var(--bg-overlay);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    width: 52px;
+    text-align: center;
+    outline: none;
+    transition: all var(--transition-fast);
+    -moz-appearance: textfield;
+}
+
+.size-input::-webkit-inner-spin-button,
+.size-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.size-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(94, 106, 210, 0.25);
+    background: var(--bg-hover);
+}
+
 /* Progress Bar — Gradient */
 .progress-track {
-    flex: 1;
-    height: 5px;
+    flex-basis: 100%;
+    height: 4px;
     background: var(--bg-overlay);
     border-radius: 6px;
     overflow: hidden;
@@ -1187,6 +1291,75 @@ body {
     background: rgba(255,255,255,0.08);
     border-radius: 4px;
 }
+
+/* ═════════════════════════════════════════════════════
+   BOTTOM BAR (Message + Legend)
+   ═════════════════════════════════════════════════════ */
+.bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding: var(--sp-2) var(--sp-6);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.message-bar {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.legend-inline {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    flex-shrink: 0;
+}
+
+.legend-inline .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.legend-inline .legend-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* ═════════════════════════════════════════════════════
+   SIDEBAR FOOTER (Branding)
+   ═════════════════════════════════════════════════════ */
+.sidebar-footer {
+    margin-top: auto;
+    padding: var(--sp-3) 0 0;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+}
+
+.sidebar-footer-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
 
 /* ═════════════════════════════════════════════════════
    CELEBRATION & VISUAL FEEDBACK
