@@ -204,14 +204,28 @@
             </div>
         </div>
 
-        <!-- DS Panel -->
-        <div class="ds-panel" id="ds-panel">
-            <div class="ds-panel-header">
-                <span class="ds-panel-label">DATA STRUCTURE</span>
-                <span class="ds-panel-type" id="ds-panel-type">Array Visualization</span>
+        <!-- Bottom Panels: DS + Pseudocode side by side -->
+        <div class="bottom-panels">
+            <!-- DS Panel -->
+            <div class="ds-panel" id="ds-panel">
+                <div class="ds-panel-header">
+                    <span class="ds-panel-label">DATA STRUCTURE</span>
+                    <span class="ds-panel-type" id="ds-panel-type">Array Visualization</span>
+                </div>
+                <div class="ds-panel-content" id="ds-panel-content">
+                    <!-- DS visualization rendered by JS -->
+                </div>
             </div>
-            <div class="ds-panel-content" id="ds-panel-content">
-                <!-- DS visualization rendered by JS -->
+
+            <!-- Pseudocode Panel -->
+            <div class="pseudocode-panel" id="pseudocode-panel">
+                <div class="ds-panel-header">
+                    <span class="ds-panel-label">PSEUDOCODE</span>
+                    <span class="ds-panel-type" id="pseudocode-algo-name">Bubble Sort</span>
+                </div>
+                <div class="pseudocode-block" id="pseudocode-block">
+                    <!-- Pseudocode lines rendered by JS -->
+                </div>
             </div>
         </div>
 
@@ -235,6 +249,7 @@
     <!-- JS Modules -->
     <script src="/static/js/renderer.js"></script>
     <script src="/static/js/animator.js"></script>
+    <script src="/static/js/pseudocode.js"></script>
     <script src="/static/js/controls.js"></script>
     <script src="/static/js/app.js"></script>
 </body>

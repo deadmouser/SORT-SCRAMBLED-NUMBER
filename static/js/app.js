@@ -59,6 +59,7 @@ const App = (() => {
     function onAlgoChange(algo) {
         const info = algoInfo[algo];
         Controls.updateInfoCard(info);
+        if (typeof Pseudocode !== 'undefined') Pseudocode.setAlgorithm(algo);
     }
 
     // ── Show initial unsorted bars (no animation) ──────────
@@ -78,6 +79,7 @@ const App = (() => {
         }
         Renderer.renderBars(step);
         Renderer.renderDS(step);
+        if (typeof Pseudocode !== 'undefined') Pseudocode.setAlgorithm(Controls.getCurrentAlgo());
         document.getElementById('message-bar').textContent = step.message;
         document.getElementById('stat-comparisons').textContent = '0';
         document.getElementById('stat-swaps').textContent = '0';

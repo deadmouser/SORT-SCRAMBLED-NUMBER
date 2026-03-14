@@ -36,6 +36,7 @@ const Animator = (() => {
 
         Renderer.renderBars(step);
         Renderer.renderDS(step);
+        if (typeof Pseudocode !== 'undefined') Pseudocode.updateFromStep(step);
         updateStats(step);
         updateProgress();
         messageBar.textContent = step.message || '';

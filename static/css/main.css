@@ -1135,6 +1135,76 @@ body {
     min-height: 80px;
 }
 
+/* ── Bottom Panels Container ─────────────────────── */
+.bottom-panels {
+    display: flex;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.bottom-panels .ds-panel {
+    flex: 1;
+    border-top: none;
+    border-right: 1px solid var(--border-subtle);
+    min-width: 0;
+}
+
+/* ── Pseudocode Panel ────────────────────────────── */
+.pseudocode-panel {
+    flex: 0 0 340px;
+    background: var(--bg-surface);
+    min-height: 120px;
+    max-height: 180px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pseudocode-block {
+    padding: var(--sp-2) var(--sp-3);
+    overflow-y: auto;
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.pseudo-line {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 1px var(--sp-2);
+    border-radius: 3px;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    white-space: pre;
+}
+
+.pseudo-line--active {
+    background: rgba(99, 102, 241, 0.2);
+    box-shadow: inset 3px 0 0 var(--accent-primary);
+    color: #fff;
+}
+
+.pseudo-num {
+    color: var(--text-muted);
+    font-size: 10px;
+    min-width: 18px;
+    user-select: none;
+    opacity: 0.5;
+}
+
+.pseudo-line--active .pseudo-num {
+    opacity: 1;
+    color: var(--accent-primary);
+}
+
+.pseudo-text {
+    color: var(--text-secondary);
+}
+
+.pseudo-line--active .pseudo-text {
+    color: #fff;
+    font-weight: 500;
+}
+
 /* DS Array Boxes */
 .ds-box {
     display: flex;
