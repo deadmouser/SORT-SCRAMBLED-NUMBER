@@ -75,8 +75,18 @@ const Controls = (() => {
             App.loadInitialState(arr);
         });
 
+        // Size slider → number input sync
         sizeSlider.addEventListener('input', () => {
-            sizeValue.textContent = sizeSlider.value;
+            sizeValue.value = sizeSlider.value;
+        });
+
+        // Number input → slider sync (keyboard-editable)
+        sizeValue.addEventListener('change', () => {
+            let val = parseInt(sizeValue.value, 10);
+            if (isNaN(val)) val = 15;
+            val = Math.max(5, Math.min(50, val));
+            sizeValue.value = val;
+            sizeSlider.value = val;
         });
 
         speedSlider.addEventListener('input', () => {
