@@ -75,6 +75,7 @@ def generate_steps(arr):
             },
             "message": f"Dividing arr[{lo}..{hi}] → left[{lo}..{mid}] and right[{mid + 1}..{hi}]",
             "operation": "divide",
+            "codeLine": 2,
             "stats": {**stats}
         })
 
@@ -102,6 +103,7 @@ def generate_steps(arr):
             },
             "message": f"Merging [{lo}..{mid}] and [{mid + 1}..{hi}]",
             "operation": "merge",
+            "codeLine": 5,
             "stats": {**stats}
         })
 
@@ -131,6 +133,7 @@ def generate_steps(arr):
                 },
                 "message": f"Comparing left[{li}]={left[li]} with right[{ri}]={right[ri]}",
                 "operation": "compare",
+                "codeLine": 8,
                 "stats": {**stats}
             })
 
@@ -163,6 +166,7 @@ def generate_steps(arr):
                 },
                 "message": f"Placed {a[k]} at position {k}",
                 "operation": "merge",
+                "codeLine": 9,
                 "stats": {**stats}
             })
 
@@ -189,6 +193,7 @@ def generate_steps(arr):
                 },
                 "message": f"Placed remaining left[{li}]={left[li]} at position {k}",
                 "operation": "merge",
+                "codeLine": 10,
                 "stats": {**stats}
             })
 
@@ -216,6 +221,7 @@ def generate_steps(arr):
                 },
                 "message": f"Placed remaining right[{ri}]={right[ri]} at position {k}",
                 "operation": "merge",
+                "codeLine": 10,
                 "stats": {**stats}
             })
 
@@ -242,6 +248,7 @@ def generate_steps(arr):
         },
         "message": "Merge Sort complete. Array is sorted.",
         "operation": "sorted",
+        "codeLine": 11,
         "stats": {**stats}
     })
 

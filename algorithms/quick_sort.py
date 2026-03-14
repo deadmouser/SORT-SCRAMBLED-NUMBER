@@ -59,6 +59,7 @@ def generate_steps(arr):
             "dsData": get_ds_data(),
             "message": f"Pivot selected: arr[{high}]={pivot} — partitioning [{low}..{high}]",
             "operation": "pivot",
+            "codeLine": 2,
             "stats": {**stats}
         })
 
@@ -82,6 +83,7 @@ def generate_steps(arr):
                 "dsData": get_ds_data(),
                 "message": f"Comparing arr[{j}]={a[j]} with pivot={pivot}",
                 "operation": "compare",
+                "codeLine": 5,
                 "stats": {**stats}
             })
 
@@ -103,6 +105,7 @@ def generate_steps(arr):
                         "dsData": get_ds_data(),
                         "message": f"Swapped arr[{i}]={a[i]} and arr[{j}]={a[j]}",
                         "operation": "swap",
+                        "codeLine": 6,
                         "stats": {**stats}
                     })
 
@@ -123,6 +126,7 @@ def generate_steps(arr):
             "dsData": get_ds_data(),
             "message": f"Pivot {a[pivot_pos]} placed at final position {pivot_pos} — left [{low}..{pivot_pos - 1}], right [{pivot_pos + 1}..{high}]",
             "operation": "sorted",
+            "codeLine": 7,
             "stats": {**stats}
         })
 
@@ -168,6 +172,7 @@ def generate_steps(arr):
         },
         "message": "Quick Sort complete. Array is sorted.",
         "operation": "sorted",
+        "codeLine": 11,
         "stats": {**stats}
     })
 

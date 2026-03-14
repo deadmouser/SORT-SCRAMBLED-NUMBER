@@ -44,6 +44,60 @@ const Renderer = (() => {
 
             barChart.appendChild(wrapper);
         });
+
+        // ── Comparison Connector ────────────────────────
+        // Draw SVG arc between two bars being compared
+        drawComparisonConnector(step);
+    }
+
+    function drawComparisonConnector(step) {
+        // Remove any existing connector
+        const oldSvg = document.querySelector('.comparison-connector');
+        if (oldSvg) oldSvg.remove();
+
+        const states = step.barStates || {};
+        const comparingIndices = [];
+        for (const [idx, state] of Object.entries(states)) {
+            if (state === 'comparing') comparingIndices.push(parseInt(idx));
+        }
+
+        if (comparingIndices.length !== 2) return;
+
+        const wrappers = barChart.querySelectorAll('.bar-wrapper');
+        if (!wrappers.length) return;
+
+        const idx1 = Math.min(...comparingIndices);
+        const idx2 = Math.max(...comparingIndices);
+
+        if (!wrappers[idx1] || !wrappers[idx2]) return;
+
+        const chartRect = barChart.getBoundingClientRect();
+        const rect1 = wrappers[idx1].getBoundingClientRect();
+        const rect2 = wrappers[idx2].getBoundingClientRect();
+
+        const x1 = rect1.left + rect1.width / 2 - chartRect.left;
+        const x2 = rect2.left + rect2.width / 2 - chartRect.left;
+        const y = chartRect.height - 4; // bottom of chart area
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('comparison-connector');
+        svg.setAttribute('width', chartRect.width);
+        svg.setAttribute('height', '28');
+        svg.style.cssText = `position:absolute; bottom:-2px; left:0; pointer-events:none; overflow:visible;`;
+
+        const arcHeight = 16;
+        const midX = (x1 + x2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} 4 Q ${midX} ${arcHeight + 4} ${x2} 4`);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', 'var(--color-comparing, #EF4444)');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('stroke-dasharray', '4 2');
+        path.setAttribute('opacity', '0.7');
+
+        svg.appendChild(path);
+        barChart.style.position = 'relative';
+        barChart.appendChild(svg);
     }
 
     // ── DS Panel Routing ───────────────────────────────────

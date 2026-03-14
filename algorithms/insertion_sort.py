@@ -49,6 +49,7 @@ def generate_steps(arr):
             },
             "message": f"Picking up {key} — need to insert it into the sorted region [0..{i-1}].",
             "operation": "compare",
+            "codeLine": 1,
             "stats": {**stats}
         })
 
@@ -77,6 +78,7 @@ def generate_steps(arr):
                 },
                 "message": f"Is {key} < {a[j]}? Yes — need to shift {a[j]} right to make room.",
                 "operation": "compare",
+                "codeLine": 3,
                 "stats": {**stats}
             })
 
@@ -105,6 +107,7 @@ def generate_steps(arr):
                 },
                 "message": f"Shifted {a[j]} one position right → slot {j+1}.",
                 "operation": "swap",
+                "codeLine": 4,
                 "stats": {**stats}
             })
 
@@ -130,6 +133,7 @@ def generate_steps(arr):
         },
         "message": "Insertion Sort complete. Array is sorted.",
         "operation": "sorted",
+        "codeLine": 7,
         "stats": {**stats}
     })
 

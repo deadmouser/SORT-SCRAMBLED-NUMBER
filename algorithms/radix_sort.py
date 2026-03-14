@@ -56,6 +56,7 @@ def generate_steps(arr):
                 },
                 "message": f"Placing {a[i]} into bucket {digit} ({digit_label} digit)",
                 "operation": "distribute",
+                "codeLine": 3,
                 "stats": {**stats}
             })
 
@@ -80,6 +81,7 @@ def generate_steps(arr):
             },
             "message": f"Collected buckets after {digit_label} pass",
             "operation": "collect",
+            "codeLine": 4,
             "stats": {**stats}
         })
 
@@ -97,6 +99,7 @@ def generate_steps(arr):
         },
         "message": "Radix Sort complete. Array is sorted.",
         "operation": "sorted",
+        "codeLine": 5,
         "stats": {**stats}
     })
 
