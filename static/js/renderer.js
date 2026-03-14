@@ -18,6 +18,9 @@ const Renderer = (() => {
         barChart.innerHTML = '';
 
         arr.forEach((val, i) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bar-wrapper';
+
             const bar = document.createElement('div');
             const state = states[String(i)] || 'default';
             const pct = (val / maxVal) * 100;
@@ -29,8 +32,72 @@ const Renderer = (() => {
                 bar.setAttribute('data-value', val);
             }
 
-            barChart.appendChild(bar);
+            wrapper.appendChild(bar);
+
+            // Index label below bar
+            if (arr.length <= 30) {
+                const idx = document.createElement('div');
+                idx.className = 'bar-index';
+                idx.textContent = i;
+                wrapper.appendChild(idx);
+            }
+
+            barChart.appendChild(wrapper);
         });
+
+        // ── Comparison Connector ────────────────────────
+        // Draw SVG arc between two bars being compared
+        drawComparisonConnector(step);
+    }
+
+    function drawComparisonConnector(step) {
+        // Remove any existing connector
+        const oldSvg = document.querySelector('.comparison-connector');
+        if (oldSvg) oldSvg.remove();
+
+        const states = step.barStates || {};
+        const comparingIndices = [];
+        for (const [idx, state] of Object.entries(states)) {
+            if (state === 'comparing') comparingIndices.push(parseInt(idx));
+        }
+
+        if (comparingIndices.length !== 2) return;
+
+        const wrappers = barChart.querySelectorAll('.bar-wrapper');
+        if (!wrappers.length) return;
+
+        const idx1 = Math.min(...comparingIndices);
+        const idx2 = Math.max(...comparingIndices);
+
+        if (!wrappers[idx1] || !wrappers[idx2]) return;
+
+        const chartRect = barChart.getBoundingClientRect();
+        const rect1 = wrappers[idx1].getBoundingClientRect();
+        const rect2 = wrappers[idx2].getBoundingClientRect();
+
+        const x1 = rect1.left + rect1.width / 2 - chartRect.left;
+        const x2 = rect2.left + rect2.width / 2 - chartRect.left;
+        const y = chartRect.height - 4; // bottom of chart area
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('comparison-connector');
+        svg.setAttribute('width', chartRect.width);
+        svg.setAttribute('height', '28');
+        svg.style.cssText = `position:absolute; bottom:-2px; left:0; pointer-events:none; overflow:visible;`;
+
+        const arcHeight = 16;
+        const midX = (x1 + x2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} 4 Q ${midX} ${arcHeight + 4} ${x2} 4`);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', 'var(--color-comparing, #EF4444)');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('stroke-dasharray', '4 2');
+        path.setAttribute('opacity', '0.7');
+
+        svg.appendChild(path);
+        barChart.style.position = 'relative';
+        barChart.appendChild(svg);
     }
 
     // ── DS Panel Routing ───────────────────────────────────
@@ -180,17 +247,35 @@ const Renderer = (() => {
         } else {
             arr.forEach((val, i) => {
                 const cell = document.createElement('div');
-                cell.className = `ds-cell${i === 0 ? ' ds-cell--comparing' : ''}`;
+                // Highlight the current pointer position, dim already-processed elements
+                if (i < ptrIdx) {
+                    cell.className = 'ds-cell ds-cell--sorted';  // already merged
+                } else if (i === ptrIdx) {
+                    cell.className = 'ds-cell ds-cell--comparing';  // current pointer
+                } else {
+                    cell.className = 'ds-cell';  // waiting
+                }
                 cell.textContent = val;
                 cells.appendChild(cell);
             });
+        }
+
+        // Pointer indicator
+        if (arr.length > 0 && ptrIdx < arr.length) {
+            const ptr = document.createElement('div');
+            ptr.style.cssText = `
+                font-family: var(--font-mono); font-size: 9px;
+                color: var(--color-comparing); text-align: center; margin-top: 2px;
+            `;
+            ptr.textContent = '\u25B2';  // ▲ triangle
+            group.appendChild(ptr);
         }
 
         group.appendChild(cells);
         return group;
     }
 
-    // ── Stack DS ───────────────────────────────────────────
+    // ── Stack DS (Quick Sort) ──────────────────────────────
     function renderStackDS(data) {
         dsContent.innerHTML = '';
 
@@ -202,6 +287,10 @@ const Renderer = (() => {
             return;
         }
 
+        const container = document.createElement('div');
+        container.style.cssText = 'display:flex; gap:16px; align-items:center;';
+
+        // Call stack frames
         const stack = document.createElement('div');
         stack.className = 'ds-stack';
 
@@ -211,7 +300,7 @@ const Renderer = (() => {
 
             const label = document.createElement('span');
             label.className = 'ds-frame-label';
-            label.textContent = i === current ? 'TOP' : `#${i}`;
+            label.textContent = i === current ? '\u25B6' : `#${i}`;  // ▶ for current
             el.appendChild(label);
 
             const range = document.createElement('span');
@@ -221,7 +310,22 @@ const Renderer = (() => {
             stack.appendChild(el);
         });
 
-        dsContent.appendChild(stack);
+        container.appendChild(stack);
+
+        // Current partition range indicator
+        if (current >= 0 && frames[current]) {
+            const rangeInfo = document.createElement('div');
+            rangeInfo.style.cssText = `
+                font-family: var(--font-mono); font-size: 11px;
+                color: var(--text-accent); padding: 6px 12px;
+                background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2);
+                border-radius: 6px; white-space: nowrap;
+            `;
+            rangeInfo.textContent = `Partitioning arr[${frames[current].low}..${frames[current].high}]`;
+            container.appendChild(rangeInfo);
+        }
+
+        dsContent.appendChild(container);
     }
 
     // ── Bucket DS ──────────────────────────────────────────

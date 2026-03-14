@@ -50,8 +50,9 @@ def generate_steps(arr):
                         "unsorted": [i, n - 1]
                     }
                 },
-                "message": f"Comparing arr[{min_idx}]={a[min_idx]} with arr[{j}]={a[j]}",
+                "message": f"Searching for minimum in unsorted region. Current min={a[min_idx]}. Checking {a[j]} — {'new min found!' if a[j] < a[min_idx] else 'not smaller.'}",
                 "operation": "compare",
+                "codeLine": 3,
                 "stats": {**stats}
             })
 
@@ -80,8 +81,9 @@ def generate_steps(arr):
                         "unsorted": [i, n - 1]
                     }
                 },
-                "message": f"Swapped arr[{i}]={a[i]} and arr[{min_idx}]={a[min_idx]}",
+                "message": f"Found minimum {a[i]} — swapping it to position {i} to extend sorted region.",
                 "operation": "swap",
+                "codeLine": 5,
                 "stats": {**stats}
             })
 
@@ -101,6 +103,7 @@ def generate_steps(arr):
         },
         "message": "Selection Sort complete. Array is sorted.",
         "operation": "sorted",
+        "codeLine": 6,
         "stats": {**stats}
     })
 
