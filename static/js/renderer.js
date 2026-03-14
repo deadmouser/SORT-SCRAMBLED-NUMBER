@@ -6,7 +6,7 @@ const Renderer = (() => {
     // ── DOM refs ────────────────────────────────────────────
     const barChart = document.getElementById('bar-chart');
     const dsContent = document.getElementById('ds-panel-content');
-    const dsType   = document.getElementById('ds-panel-type');
+    const dsType = document.getElementById('ds-panel-type');
 
     // ── Bar Rendering ──────────────────────────────────────
     function renderBars(step) {
