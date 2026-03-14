@@ -26,11 +26,16 @@ def generate_steps(arr):
         })
         return steps
 
-    def get_bar_states():
-        """Build barStates with current sorted indices."""
+    def get_bar_states(partition_low=None, partition_high=None):
+        """Build barStates with sorted indices and optional partition range."""
         bs = {str(k): "default" for k in range(n)}
         for s in sorted_indices:
             bs[str(s)] = "sorted"
+        # Show current partition range with "selected" state
+        if partition_low is not None and partition_high is not None:
+            for k in range(partition_low, partition_high + 1):
+                if bs[str(k)] == "default":
+                    bs[str(k)] = "selected"  # in current partition range
         return bs
 
     def get_ds_data():
@@ -44,15 +49,15 @@ def generate_steps(arr):
         """Lomuto partition with pivot = arr[high]."""
         pivot = a[high]
 
-        # Show pivot selection
-        bs = get_bar_states()
+        # Show pivot selection — highlight entire partition range
+        bs = get_bar_states(low, high)
         bs[str(high)] = "pivot"
         steps.append({
             "arr": a[:],
             "barStates": bs,
             "dsType": "stack",
             "dsData": get_ds_data(),
-            "message": f"Pivot selected: arr[{high}]={pivot}",
+            "message": f"Pivot selected: arr[{high}]={pivot} — partitioning [{low}..{high}]",
             "operation": "pivot",
             "stats": {**stats}
         })
@@ -62,10 +67,13 @@ def generate_steps(arr):
         for j in range(low, high):
             stats["comparisons"] += 1
 
-            # Compare step
-            bs_cmp = get_bar_states()
+            # Compare step — show partition range, pivot, and comparing element
+            bs_cmp = get_bar_states(low, high)
             bs_cmp[str(high)] = "pivot"
             bs_cmp[str(j)] = "comparing"
+            # Show the i boundary
+            if i >= low:
+                bs_cmp[str(i)] = "selected"
 
             steps.append({
                 "arr": a[:],
@@ -83,7 +91,7 @@ def generate_steps(arr):
                     a[i], a[j] = a[j], a[i]
                     stats["swaps"] += 1
 
-                    bs_swap = get_bar_states()
+                    bs_swap = get_bar_states(low, high)
                     bs_swap[str(high)] = "pivot"
                     bs_swap[str(i)] = "swapping"
                     bs_swap[str(j)] = "swapping"
@@ -105,7 +113,7 @@ def generate_steps(arr):
         pivot_pos = i + 1
         sorted_indices.add(pivot_pos)
 
-        bs_placed = get_bar_states()
+        bs_placed = get_bar_states(low, high)
         bs_placed[str(pivot_pos)] = "sorted"
 
         steps.append({
@@ -113,7 +121,7 @@ def generate_steps(arr):
             "barStates": bs_placed,
             "dsType": "stack",
             "dsData": get_ds_data(),
-            "message": f"Pivot {a[pivot_pos]} placed at final position {pivot_pos}",
+            "message": f"Pivot {a[pivot_pos]} placed at final position {pivot_pos} — left [{low}..{pivot_pos - 1}], right [{pivot_pos + 1}..{high}]",
             "operation": "sorted",
             "stats": {**stats}
         })
@@ -131,6 +139,18 @@ def generate_steps(arr):
         else:
             if low == high:
                 sorted_indices.add(low)
+
+                # Show single element as sorted
+                bs = get_bar_states()
+                steps.append({
+                    "arr": a[:],
+                    "barStates": bs,
+                    "dsType": "stack",
+                    "dsData": get_ds_data(),
+                    "message": f"Single element arr[{low}]={a[low]} is already in place",
+                    "operation": "sorted",
+                    "stats": {**stats}
+                })
 
         call_stack.pop()
 

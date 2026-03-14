@@ -180,17 +180,35 @@ const Renderer = (() => {
         } else {
             arr.forEach((val, i) => {
                 const cell = document.createElement('div');
-                cell.className = `ds-cell${i === 0 ? ' ds-cell--comparing' : ''}`;
+                // Highlight the current pointer position, dim already-processed elements
+                if (i < ptrIdx) {
+                    cell.className = 'ds-cell ds-cell--sorted';  // already merged
+                } else if (i === ptrIdx) {
+                    cell.className = 'ds-cell ds-cell--comparing';  // current pointer
+                } else {
+                    cell.className = 'ds-cell';  // waiting
+                }
                 cell.textContent = val;
                 cells.appendChild(cell);
             });
+        }
+
+        // Pointer indicator
+        if (arr.length > 0 && ptrIdx < arr.length) {
+            const ptr = document.createElement('div');
+            ptr.style.cssText = `
+                font-family: var(--font-mono); font-size: 9px;
+                color: var(--color-comparing); text-align: center; margin-top: 2px;
+            `;
+            ptr.textContent = '\u25B2';  // ▲ triangle
+            group.appendChild(ptr);
         }
 
         group.appendChild(cells);
         return group;
     }
 
-    // ── Stack DS ───────────────────────────────────────────
+    // ── Stack DS (Quick Sort) ──────────────────────────────
     function renderStackDS(data) {
         dsContent.innerHTML = '';
 
@@ -202,6 +220,10 @@ const Renderer = (() => {
             return;
         }
 
+        const container = document.createElement('div');
+        container.style.cssText = 'display:flex; gap:16px; align-items:center;';
+
+        // Call stack frames
         const stack = document.createElement('div');
         stack.className = 'ds-stack';
 
@@ -211,7 +233,7 @@ const Renderer = (() => {
 
             const label = document.createElement('span');
             label.className = 'ds-frame-label';
-            label.textContent = i === current ? 'TOP' : `#${i}`;
+            label.textContent = i === current ? '\u25B6' : `#${i}`;  // ▶ for current
             el.appendChild(label);
 
             const range = document.createElement('span');
@@ -221,7 +243,22 @@ const Renderer = (() => {
             stack.appendChild(el);
         });
 
-        dsContent.appendChild(stack);
+        container.appendChild(stack);
+
+        // Current partition range indicator
+        if (current >= 0 && frames[current]) {
+            const rangeInfo = document.createElement('div');
+            rangeInfo.style.cssText = `
+                font-family: var(--font-mono); font-size: 11px;
+                color: var(--text-accent); padding: 6px 12px;
+                background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2);
+                border-radius: 6px; white-space: nowrap;
+            `;
+            rangeInfo.textContent = `Partitioning arr[${frames[current].low}..${frames[current].high}]`;
+            container.appendChild(rangeInfo);
+        }
+
+        dsContent.appendChild(container);
     }
 
     // ── Bucket DS ──────────────────────────────────────────
