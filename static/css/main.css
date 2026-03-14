@@ -1188,6 +1188,81 @@ body {
     border-radius: 4px;
 }
 
+/* ═════════════════════════════════════════════════════
+   CELEBRATION & VISUAL FEEDBACK
+   ═════════════════════════════════════════════════════ */
+
+/* Stat number bump when value changes */
+.stat-bump {
+    animation: statBump 200ms ease-out;
+}
+
+@keyframes statBump {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Sorting in progress — pulse the progress bar */
+.is-sorting .progress-fill {
+    animation: progressPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.7; }
+}
+
+/* Sorting in progress — subtle glow on sort button */
+.is-sorting .sort-btn {
+    box-shadow: 0 0 24px rgba(94, 106, 210, 0.5), 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* Completion — bar celebration cascade */
+.bar--celebrate {
+    box-shadow:
+        0 0 16px rgba(34, 197, 94, 0.5),
+        0 0 32px rgba(34, 197, 94, 0.2),
+        inset 0 1px 0 rgba(255,255,255,0.15) !important;
+    animation: celebratePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes celebratePop {
+    0%   { transform: scaleY(0.95); }
+    60%  { transform: scaleY(1.03); }
+    100% { transform: scaleY(1); }
+}
+
+/* Viz container - green glow border flash */
+.viz--celebrate {
+    animation: vizFlash 0.8s ease-out;
+}
+
+@keyframes vizFlash {
+    0%   { box-shadow: inset 0 0 40px rgba(34, 197, 94, 0.15); }
+    100% { box-shadow: none; }
+}
+
+/* Complete state — green accent on progress */
+.is-complete .progress-fill {
+    background: linear-gradient(90deg, #22C55E 0%, #10B981 50%, #06B6D4 100%);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+    animation: none;
+}
+
+/* Completion message styling */
+.msg-complete {
+    color: var(--color-sorted);
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+    animation: msgFade 0.5s ease-out;
+}
+
+@keyframes msgFade {
+    0%   { opacity: 0; transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
 /* ── UTILITY ────────────────────────────────────────────────── */
 .hidden { display: none !important; }
 

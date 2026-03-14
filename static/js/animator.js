@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    animator.js — Plays back pre-computed Step arrays
+   with completion celebration effects
    ═══════════════════════════════════════════════════════════════ */
 
 const Animator = (() => {
@@ -14,6 +15,7 @@ const Animator = (() => {
     const pauseIcon  = document.getElementById('pause-icon');
     const progressEl = document.getElementById('progress-fill');
     const messageBar = document.getElementById('message-bar');
+    const vizContainer = document.getElementById('viz-container');
     const statComparisons = document.getElementById('stat-comparisons');
     const statSwaps  = document.getElementById('stat-swaps');
     const statStep   = document.getElementById('stat-step');
@@ -21,8 +23,10 @@ const Animator = (() => {
     // ── Core ────────────────────────────────────────────────
     function loadSteps(newSteps) {
         stop();
+        clearCelebration();
         steps = newSteps;
         index = 0;
+        document.body.classList.add('is-sorting');
         renderCurrent();
     }
 
@@ -39,9 +43,18 @@ const Animator = (() => {
 
     function updateStats(step) {
         const s = step.stats || {};
-        statComparisons.textContent = s.comparisons ?? 0;
-        statSwaps.textContent = s.swaps ?? 0;
+        animateStatValue(statComparisons, s.comparisons ?? 0);
+        animateStatValue(statSwaps, s.swaps ?? 0);
         statStep.textContent = `${index + 1} / ${steps.length}`;
+    }
+
+    function animateStatValue(el, newVal) {
+        const oldVal = el.textContent;
+        el.textContent = newVal;
+        if (String(newVal) !== String(oldVal)) {
+            el.classList.add('stat-bump');
+            setTimeout(() => el.classList.remove('stat-bump'), 200);
+        }
     }
 
     function updateProgress() {
@@ -56,8 +69,10 @@ const Animator = (() => {
         if (steps.length === 0) return;
         if (index >= steps.length - 1) {
             index = 0;  // restart
+            clearCelebration();
         }
         playing = true;
+        document.body.classList.add('is-sorting');
         showPauseIcon();
         tick();
     }
@@ -65,6 +80,9 @@ const Animator = (() => {
     function tick() {
         if (!playing || index >= steps.length - 1) {
             stop();
+            if (index >= steps.length - 1 && steps.length > 0) {
+                celebrate();
+            }
             return;
         }
         index++;
@@ -81,7 +99,6 @@ const Animator = (() => {
 
     function stop() {
         pause();
-        // keep current index, don't reset
     }
 
     function togglePlay() {
@@ -93,12 +110,16 @@ const Animator = (() => {
             pause();
             index++;
             renderCurrent();
+            if (index >= steps.length - 1) {
+                celebrate();
+            }
         }
     }
 
     function stepBack() {
         if (index > 0) {
             pause();
+            clearCelebration();
             index--;
             renderCurrent();
         }
@@ -106,6 +127,8 @@ const Animator = (() => {
 
     function reset() {
         pause();
+        clearCelebration();
+        document.body.classList.remove('is-sorting');
         index = 0;
         if (steps.length > 0) {
             renderCurrent();
@@ -113,9 +136,35 @@ const Animator = (() => {
     }
 
     function setSpeed(value) {
-        // value: 1 (slowest) to 100 (fastest)
-        // Map to delay: 500ms (slow) to 10ms (fast)
         speed = Math.round(500 - (value / 100) * 490);
+    }
+
+    // ── Celebration ─────────────────────────────────────────
+    function celebrate() {
+        document.body.classList.remove('is-sorting');
+        document.body.classList.add('is-complete');
+
+        // Cascade glow on each bar
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach((bar, i) => {
+            setTimeout(() => {
+                bar.classList.add('bar--celebrate');
+            }, i * 40);
+        });
+
+        // Flash the viz container border
+        vizContainer.classList.add('viz--celebrate');
+
+        // Update message with celebration
+        messageBar.innerHTML = '<span class="msg-complete">Sorting complete!</span>';
+    }
+
+    function clearCelebration() {
+        document.body.classList.remove('is-complete');
+        vizContainer.classList.remove('viz--celebrate');
+        document.querySelectorAll('.bar--celebrate').forEach(b =>
+            b.classList.remove('bar--celebrate')
+        );
     }
 
     // ── Icon toggling ──────────────────────────────────────
