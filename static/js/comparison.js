@@ -3,6 +3,227 @@
  * Part of the Sort Scramble Visualization Engine.
  */
 
-/* Comparison page JS — populated Day 3 */
-(function() { 'use strict'; console.log('Compare page loaded'); })();
+(function () {
+    'use strict';
 
+    document.addEventListener('DOMContentLoaded', () => {
+        // Elements
+        const algo1Select = document.getElementById('compare-algo1');
+        const algo2Select = document.getElementById('compare-algo2');
+        const arrayInput = document.getElementById('compare-array');
+        const btnRandom = document.getElementById('compare-random');
+        const btnCompare = document.getElementById('btn-compare');
+
+        // Transport Controls
+        const transportContainer = document.getElementById('compare-transport');
+        const btnPlay = document.getElementById('compare-play');
+        const btnStepFwd = document.getElementById('compare-step-fwd');
+        const btnStepBack = document.getElementById('compare-step-back');
+        const btnReset = document.getElementById('compare-reset');
+
+        // Output Panels
+        const leftBars = document.getElementById('compare-left-bars');
+        const leftStats = document.getElementById('compare-left-stats');
+        const rightBars = document.getElementById('compare-right-bars');
+        const rightStats = document.getElementById('compare-right-stats');
+
+        // State
+        let currentStep = 0;
+        let leftSteps = [];
+        let rightSteps = [];
+        let isPlaying = false;
+        let animationId = null;
+        let lastTimestamp = 0;
+        const speedMs = 150; // Delay between steps when playing
+
+        /**
+         * Parses the comma-separated string into an array of integers.
+         */
+        function parseArrayInput(val) {
+            return val
+                .split(',')
+                .map(s => parseInt(s.trim(), 10))
+                .filter(n => !isNaN(n));
+        }
+
+        // Generate Random Array
+        btnRandom.addEventListener('click', () => {
+            const arr = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100) + 1);
+            arrayInput.value = arr.join(', ');
+        });
+
+        // Start Comparison
+        btnCompare.addEventListener('click', async () => {
+            const arr = parseArrayInput(arrayInput.value);
+            if (arr.length === 0) {
+                alert('Please enter a valid array of numbers.');
+                return;
+            }
+
+            const algo1 = algo1Select.value;
+            const algo2 = algo2Select.value;
+
+            btnCompare.disabled = true;
+            stopAutoPlay();
+            currentStep = 0;
+
+            try {
+                // Fetch steps for both algorithms in parallel
+                const [res1, res2] = await Promise.all([
+                    fetch('/api/sort', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ algorithm: algo1, array: arr })
+                    }).then(r => r.json()),
+                    fetch('/api/sort', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ algorithm: algo2, array: arr })
+                    }).then(r => r.json())
+                ]);
+
+                leftSteps = res1.steps || [];
+                rightSteps = res2.steps || [];
+
+                transportContainer.style.display = 'flex';
+                updateRender();
+            } catch (err) {
+                console.error('Failed to fetch sorting steps:', err);
+                alert('An error occurred while fetching the algorithm steps.');
+            } finally {
+                btnCompare.disabled = false;
+            }
+        });
+
+        /**
+         * Render the visualization bars and stats for a given step.
+         */
+        function renderPanel(containerBars, containerStats, stepData) {
+            if (!stepData) return;
+
+            // Update Stats
+            const stats = stepData.stats || { comparisons: 0, swaps: 0 };
+            containerStats.innerHTML = `
+                <span><strong>Comparisons:</strong> ${stats.comparisons}</span>
+                <span><strong>Swaps:</strong> ${stats.swaps}</span>
+            `;
+
+            // Update Bars
+            containerBars.innerHTML = '';
+            const arr = stepData.arr;
+            const barStates = stepData.barStates || {};
+            
+            const maxVal = Math.max(...arr, 1); // Avoid division by zero
+
+            arr.forEach((val, idx) => {
+                const heightPct = (val / maxVal) * 100;
+                const state = barStates[idx] || 'default';
+
+                const barDiv = document.createElement('div');
+                barDiv.className = 'bar';
+                barDiv.style.height = `${heightPct}%`;
+                barDiv.setAttribute('data-state', state);
+
+                // Add value label tooltip
+                barDiv.title = `Value: ${val}`;
+
+                containerBars.appendChild(barDiv);
+            });
+        }
+
+        /**
+         * Update both panels based on the `currentStep` index.
+         * If an algorithm finishes early, stick to its final step.
+         */
+        function updateRender() {
+            const lStep = leftSteps[Math.min(currentStep, leftSteps.length - 1)];
+            const rStep = rightSteps[Math.min(currentStep, rightSteps.length - 1)];
+
+            renderPanel(leftBars, leftStats, lStep);
+            renderPanel(rightBars, rightStats, rStep);
+
+            // Update button states
+            btnStepBack.disabled = (currentStep === 0);
+            
+            const maxSteps = Math.max(leftSteps.length, rightSteps.length);
+            const isFinished = currentStep >= maxSteps - 1;
+            
+            btnStepFwd.disabled = isFinished;
+            if (isFinished && isPlaying) {
+                stopAutoPlay();
+            }
+        }
+
+        // --- Transport Controls ---
+
+        btnStepFwd.addEventListener('click', () => {
+            const maxSteps = Math.max(leftSteps.length, rightSteps.length);
+            if (currentStep < maxSteps - 1) {
+                currentStep++;
+                updateRender();
+            }
+        });
+
+        btnStepBack.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateRender();
+            }
+        });
+
+        btnReset.addEventListener('click', () => {
+            stopAutoPlay();
+            currentStep = 0;
+            updateRender();
+        });
+
+        btnPlay.addEventListener('click', () => {
+            if (isPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        });
+
+        function startAutoPlay() {
+            const maxSteps = Math.max(leftSteps.length, rightSteps.length);
+            if (currentStep >= maxSteps - 1) return; // Already at end
+
+            isPlaying = true;
+            btnPlay.textContent = '⏸ Pause';
+            lastTimestamp = performance.now();
+            animationId = requestAnimationFrame(autoPlayLoop);
+        }
+
+        function stopAutoPlay() {
+            isPlaying = false;
+            btnPlay.textContent = '▶ Play';
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+
+        function autoPlayLoop(timestamp) {
+            if (!isPlaying) return;
+
+            const elapsed = timestamp - lastTimestamp;
+            if (elapsed > speedMs) {
+                const maxSteps = Math.max(leftSteps.length, rightSteps.length);
+                if (currentStep < maxSteps - 1) {
+                    currentStep++;
+                    updateRender();
+                    lastTimestamp = timestamp;
+                } else {
+                    stopAutoPlay();
+                    return;
+                }
+            }
+            animationId = requestAnimationFrame(autoPlayLoop);
+        }
+
+        // Initialize empty state message
+        leftBars.innerHTML = '<p class="text-muted">Select algorithms and click compare to start.</p>';
+        rightBars.innerHTML = '<p class="text-muted">Select algorithms and click compare to start.</p>';
+    });
+})();
