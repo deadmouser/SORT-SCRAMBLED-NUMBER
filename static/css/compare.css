@@ -99,18 +99,36 @@
     font-size: 0.9rem;
     color: var(--text-muted);
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+.panel-stats strong {
+    color: var(--primary);
+    margin-right: 0.25rem;
 }
 
 .panel-bars {
-    height: 300px;
-    padding: 2rem;
+    height: 350px;
+    padding: 2.5rem;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
     position: relative;
     background: var(--bg);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 .placeholder-text {

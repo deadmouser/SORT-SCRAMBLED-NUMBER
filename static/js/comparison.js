@@ -23,17 +23,18 @@
 
         // Output Panels
         const leftBars = document.getElementById('compare-left-bars');
-        const leftStats = document.getElementById('compare-left-stats');
+        const leftStats = document.getElementById('panel-left-stats');
         const leftTitle = document.getElementById('panel-left-name');
         
         const rightBars = document.getElementById('compare-right-bars');
-        const rightStats = document.getElementById('compare-right-stats');
+        const rightStats = document.getElementById('panel-right-stats');
         const rightTitle = document.getElementById('panel-right-name');
 
         // State
         let currentStep = 0;
         let leftSteps = [];
         let rightSteps = [];
+        let globalMaxVal = 1; // Centralized scale for comparison
         let isPlaying = false;
         let animationId = null;
         let lastTimestamp = 0;
@@ -70,6 +71,9 @@
             const algo2 = algo2Select.value;
 
             btnCompare.disabled = true;
+            leftBars.innerHTML = '<div class="loading-spinner"></div>';
+            rightBars.innerHTML = '<div class="loading-spinner"></div>';
+            
             stopAutoPlay();
             currentStep = 0;
 
@@ -90,6 +94,9 @@
 
                 leftSteps = res1.steps || [];
                 rightSteps = res2.steps || [];
+                
+                // Calculate global max value for synchronized scaling
+                globalMaxVal = Math.max(...arr, 1);
                 
                 // Update Panel Titles
                 leftTitle.textContent = res1.info ? res1.info.name : algo1.toUpperCase();
@@ -123,10 +130,8 @@
             const arr = stepData.arr;
             const barStates = stepData.barStates || {};
             
-            const maxVal = Math.max(...arr, 1); // Avoid division by zero
-
             arr.forEach((val, idx) => {
-                const heightPct = (val / maxVal) * 100;
+                const heightPct = (val / globalMaxVal) * 100;
                 const state = barStates[idx] || 'default';
 
                 const barDiv = document.createElement('div');
