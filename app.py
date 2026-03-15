@@ -1,8 +1,8 @@
+import time
 from flask import Flask, render_template, request, jsonify
 from algorithms import ALGO_INFO
 
-# ── Import algorithm step generators ──────────────────────────
-# Dev will create these files. Until then, we use a mock.
+# -- Import algorithm step generators -----------------------------------------
 try:
     from algorithms.bubble_sort import generate_steps as bubble_steps
 except ImportError:
@@ -33,7 +33,8 @@ try:
 except ImportError:
     radix_steps = None
 
-# ── Flask App ─────────────────────────────────────────────────
+
+# -- Flask App ----------------------------------------------------------------
 app = Flask(__name__)
 
 ALGORITHMS = {
@@ -47,7 +48,7 @@ ALGORITHMS = {
 
 
 def mock_steps(arr):
-    """Fallback mock if Dev's algorithm file is not ready yet."""
+    """Fallback mock if algorithm file is not ready yet."""
     n = len(arr)
     sorted_arr = sorted(arr)
     return [
@@ -72,10 +73,39 @@ def mock_steps(arr):
     ]
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+# -- Page Routes ---------------------------------------------------------------
 
+@app.route("/")
+def landing():
+    return render_template("landing.html", active_page="landing")
+
+
+@app.route("/visualizer")
+def visualizer():
+    return render_template("visualizer.html", active_page="visualizer")
+
+
+@app.route("/benchmark")
+def benchmark():
+    return render_template("benchmark.html", active_page="benchmark")
+
+
+@app.route("/learn")
+def learn():
+    return render_template("learn.html", active_page="learn")
+
+
+@app.route("/compare")
+def compare():
+    return render_template("compare.html", active_page="compare")
+
+
+@app.route("/race")
+def race():
+    return render_template("race.html", active_page="race")
+
+
+# -- API Routes ----------------------------------------------------------------
 
 @app.route("/api/info")
 def info():
@@ -96,6 +126,81 @@ def sort():
 
     return jsonify({"steps": steps, "info": ALGO_INFO.get(algo, {})})
 
+
+@app.route("/api/benchmark", methods=["POST"])
+def api_benchmark():
+    """Run benchmark across all algorithms for a given array size and pattern."""
+    data = request.get_json()
+    size = min(int(data.get("size", 50)), 1000)
+    pattern = data.get("pattern", "random")
+    iterations = min(int(data.get("iterations", 50)), 100)
+
+    import random
+
+    # Generate array based on pattern
+    if pattern == "sorted":
+        arr = list(range(1, size + 1))
+    elif pattern == "reversed":
+        arr = list(range(size, 0, -1))
+    elif pattern == "nearly_sorted":
+        arr = list(range(1, size + 1))
+        swaps = max(1, size // 10)
+        for _ in range(swaps):
+            i, j = random.randint(0, size - 1), random.randint(0, size - 1)
+            arr[i], arr[j] = arr[j], arr[i]
+    elif pattern == "few_unique":
+        unique_vals = [random.randint(1, max(5, size // 5)) for _ in range(min(5, size))]
+        arr = [random.choice(unique_vals) for _ in range(size)]
+    else:  # random
+        arr = [random.randint(1, size * 10) for _ in range(size)]
+
+    results = []
+    for algo_name, step_fn in ALGORITHMS.items():
+        if step_fn is None:
+            continue
+
+        times = []
+        last_steps = None
+        for _ in range(iterations):
+            copy = arr[:]
+            start = time.perf_counter()
+            steps = step_fn(copy)
+            elapsed = (time.perf_counter() - start) * 1000  # ms
+            times.append(elapsed)
+            last_steps = steps
+
+        final_stats = last_steps[-1]["stats"] if last_steps else {}
+        results.append({
+            "algorithm": algo_name,
+            "name": ALGO_INFO.get(algo_name, {}).get("name", algo_name),
+            "avg_ms": round(sum(times) / len(times), 3),
+            "min_ms": round(min(times), 3),
+            "max_ms": round(max(times), 3),
+            "comparisons": final_stats.get("comparisons", 0),
+            "swaps": final_stats.get("swaps", 0),
+            "steps": len(last_steps) if last_steps else 0,
+            "info": ALGO_INFO.get(algo_name, {}),
+        })
+
+    # Sort by avg_ms for ranking
+    results.sort(key=lambda r: r["avg_ms"])
+
+    return jsonify({
+        "results": results,
+        "array_size": size,
+        "pattern": pattern,
+        "iterations": iterations,
+    })
+
+
+# -- Error Handlers ------------------------------------------------------------
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html", active_page=""), 404
+
+
+# -- Run -----------------------------------------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
