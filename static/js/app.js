@@ -38,6 +38,7 @@ const App = (() => {
         const arr = Controls.getArray();
 
         document.getElementById('message-bar').textContent = 'Generating steps...';
+        document.getElementById('message-bar').style.color = ''; // Reset color
 
         try {
             const resp = await fetch('/api/sort', {
@@ -45,6 +46,12 @@ const App = (() => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ algorithm: algo, array: arr })
             });
+
+            if (!resp.ok) {
+                const errData = await resp.json().catch(() => ({}));
+                throw new Error(errData.error || `Server error: ${resp.status}`);
+            }
+
             const data = await resp.json();
 
             if (data.info) {
@@ -55,8 +62,9 @@ const App = (() => {
             Animator.play();
         } catch (err) {
             console.error('Sort error:', err);
-            document.getElementById('message-bar').textContent =
-                'Error: could not connect to server. Is Flask running?';
+            const msgBar = document.getElementById('message-bar');
+            msgBar.textContent = `Error: ${err.message}`;
+            msgBar.style.color = '#FF6B6B'; // Red error text
         }
     }
 
@@ -86,6 +94,7 @@ const App = (() => {
         Renderer.renderDS(step);
         if (typeof Pseudocode !== 'undefined') Pseudocode.setAlgorithm(Controls.getCurrentAlgo());
         document.getElementById('message-bar').textContent = step.message;
+        document.getElementById('message-bar').style.color = ''; // Reset color
         document.getElementById('stat-comparisons').textContent = '0';
         document.getElementById('stat-swaps').textContent = '0';
         document.getElementById('stat-step').textContent = '0 / 0';

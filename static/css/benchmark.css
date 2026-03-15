@@ -2,6 +2,45 @@
    BENCHMARK PAGE STYLES
    ═══════════════════════════════════════════════════════════════ */
 
+/* ── Parallax Background ──────────────────────────────────────── */
+.benchmark-bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('/static/img/background-2.jpeg') center/cover no-repeat;
+    background-attachment: fixed;
+    opacity: 0.45; /* Darker than landing page (0.6) */
+    mix-blend-mode: screen;
+    z-index: -1;
+    pointer-events: none;
+    animation: parallaxPulseBench 20s ease-in-out infinite alternate;
+}
+
+.benchmark-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Premium luxury tech neon glow on the sides */
+    background: 
+        radial-gradient(ellipse at 0% 50%, rgba(112, 0, 255, 0.4) 0%, transparent 40%),
+        radial-gradient(ellipse at 100% 50%, rgba(0, 240, 255, 0.3) 0%, transparent 40%);
+    mix-blend-mode: screen;
+}
+
+@keyframes parallaxPulseBench {
+    0% { filter: brightness(0.7) contrast(1.1); transform: scale(1); }
+    100% { filter: brightness(0.9) contrast(1.2); transform: scale(1.05); }
+}
+
+/* ── Container Layout ─────────────────────────────────────────── */
+.page-container {
+    background: transparent;
+    position: relative;
+    z-index: 1; /* Creates stacking context for the parallax background */
+    padding: 2rpx; /* Default margin is handled by layout if present */
+}
+
 /* ── Controls ─────────────────────────────────────────────────── */
 .benchmark-controls {
     background: var(--bg-surface);

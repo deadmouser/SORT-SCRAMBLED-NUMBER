@@ -52,6 +52,10 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ size, pattern, iterations }),
     });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || `Server error: ${res.status}`);
+    }
     return res.json();
   }
 
@@ -95,6 +99,7 @@
     } catch (err) {
       console.error('Benchmark failed:', err);
       hideLoading();
+      alert(`Benchmark Error: ${err.message}`);
     } finally {
       btnRun.disabled = false;
       btnMatrix.disabled = false;
@@ -112,33 +117,38 @@
     const matrixData = {};
     let firstResults = null;
 
-    for (let i = 0; i < PATTERNS.length; i++) {
-      const pattern = PATTERNS[i];
-      const progress = Math.round(((i) / PATTERNS.length) * 80);
-      showLoading(`Pattern ${i + 1}/${PATTERNS.length}: ${PATTERN_LABELS[pattern]}...`, progress);
+    try {
+      for (let i = 0; i < PATTERNS.length; i++) {
+        const pattern = PATTERNS[i];
+        const progress = Math.round(((i) / PATTERNS.length) * 80);
+        showLoading(`Pattern ${i + 1}/${PATTERNS.length}: ${PATTERN_LABELS[pattern]}...`, progress);
 
-      const data = await runBenchmark(size, pattern, iterations);
-      matrixData[pattern] = data.results;
+        const data = await runBenchmark(size, pattern, iterations);
+        matrixData[pattern] = data.results;
 
-      if (i === 0) firstResults = data.results;
+        if (i === 0) firstResults = data.results;
+      }
+
+      showLoading('Building heatmap...', 95);
+
+      resultsEl.style.display = 'block';
+      renderSummaryCards(firstResults);
+      renderExecTimeChart(firstResults);
+      renderOperationsChart(firstResults);
+      renderGrowthCurves(size);
+      renderPatternMatrix(matrixData, size);
+      renderComparisonTable(firstResults);
+      renderAnalysisReport(firstResults, size, 'random');
+
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      console.error('Matrix Benchmark failed:', err);
+      alert(`Matrix Error: ${err.message}`);
+    } finally {
+      hideLoading();
+      btnRun.disabled = false;
+      btnMatrix.disabled = false;
     }
-
-    showLoading('Building heatmap...', 95);
-
-    resultsEl.style.display = 'block';
-    renderSummaryCards(firstResults);
-    renderExecTimeChart(firstResults);
-    renderOperationsChart(firstResults);
-    renderGrowthCurves(size);
-    renderPatternMatrix(matrixData, size);
-    renderComparisonTable(firstResults);
-    renderAnalysisReport(firstResults, size, 'random');
-
-    hideLoading();
-    btnRun.disabled = false;
-    btnMatrix.disabled = false;
-
-    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   // ── Render Summary Cards ──────────────────────────────────────

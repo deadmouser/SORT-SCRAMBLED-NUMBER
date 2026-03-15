@@ -12,17 +12,7 @@
     <!-- ── SIDEBAR ────────────────────────────────────────── -->
     <aside class="sidebar" id="sidebar">
 
-        <!-- Logo (sidebar version) -->
-        <div class="sidebar-logo">
-            <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
-                <rect width="32" height="32" rx="4" fill="#12141B"/>
-                <rect x="4" y="20" width="4" height="8" fill="#8B5CF6" rx="1"/>
-                <rect x="10" y="14" width="4" height="14" fill="#06B6D4" rx="1"/>
-                <rect x="16" y="8" width="4" height="20" fill="#5E6AD2" rx="1"/>
-                <rect x="22" y="4" width="4" height="24" fill="#22C55E" rx="1"/>
-            </svg>
-            <span class="logo-text">SORT SCRAMBLE</span>
-        </div>
+        <!-- Logo removed to save vertical space; branding is handled globally or via clean space -->
 
         <!-- Algorithm Selector with Category Labels -->
         <div class="sidebar-section">
@@ -109,37 +99,6 @@
             </div>
         </div>
 
-        <!-- Input Controls -->
-        <div class="sidebar-section">
-            <div class="section-label">Array Input</div>
-            <div class="input-group">
-                <input
-                    type="text"
-                    id="array-input"
-                    class="text-input"
-                    placeholder="e.g. 64, 11, 90, 25, 3, 47"
-                    spellcheck="false"
-                >
-                <div class="input-actions">
-                    <button class="action-btn action-btn--primary" id="btn-random" title="Generate random array">
-                        <i data-lucide="refresh-cw" style="width:14px;height:14px"></i>
-                        Random
-                    </button>
-                    <div class="size-control">
-                        <label for="size-slider" class="size-label">Array Size</label>
-                        <input type="range" id="size-slider" min="5" max="50" value="15" class="slider">
-                        <input type="number" id="size-value" class="size-input" value="15" min="5" max="50" step="1">
-                    </div>
-                </div>
-                <!-- Preset Arrays -->
-                <div class="preset-row">
-                    <button class="preset-btn" data-preset="sorted">Sorted</button>
-                    <button class="preset-btn" data-preset="reverse">Reverse</button>
-                    <button class="preset-btn" data-preset="nearly">Nearly Sorted</button>
-                    <button class="preset-btn" data-preset="random">Random</button>
-                </div>
-            </div>
-        </div>
 
         <!-- Sidebar Footer -->
         <div class="sidebar-footer">
@@ -182,11 +141,6 @@
                     SORT
                 </button>
 
-                <!-- Sound Toggle (muted by default) -->
-                <button class="transport-btn" id="btn-sound" title="Toggle Sound">
-                    <i data-lucide="volume-x" id="sound-icon-off" style="width:16px;height:16px"></i>
-                    <i data-lucide="volume-2" id="sound-icon-on" style="display:none;width:16px;height:16px"></i>
-                </button>
 
                 <!-- Fullscreen Toggle -->
                 <button class="transport-btn" id="btn-fullscreen" title="Fullscreen">
@@ -277,30 +231,59 @@
             </div>
         </div>
 
-        <!-- Bottom Bar: Message + Color Legend -->
-        <div class="bottom-bar">
-            <div class="message-bar" id="message-bar">
-                Select an algorithm and click SORT to begin.
+        <!-- Premium Bottom Dock -->
+        <div class="bottom-dock">
+            <div class="dock-main">
+                <label for="array-input" class="dock-label">ARRAY</label>
+                <div class="input-group-dock">
+                    <input
+                        type="text"
+                        id="array-input"
+                        class="text-input dock-text-input"
+                        placeholder="e.g. 64, 11, 90..."
+                        spellcheck="false"
+                    >
+                    <button class="action-btn action-btn--primary" id="btn-random" title="Generate random array">
+                        <i data-lucide="refresh-cw" style="width:14px;height:14px"></i>
+                        Random
+                    </button>
+                    <div class="size-control-dock">
+                        <span class="size-label">Size</span>
+                        <input type="range" id="size-slider" min="5" max="50" value="15" class="slider">
+                        <input type="number" id="size-value" class="size-input" value="15" min="5" max="50" step="1">
+                    </div>
+                    <div class="divider-v"></div>
+                    <div class="preset-row">
+                        <button class="preset-btn" data-preset="sorted">Sorted</button>
+                        <button class="preset-btn" data-preset="reverse">Reverse</button>
+                        <button class="preset-btn" data-preset="nearly">Nearly Sorted</button>
+                    </div>
+                </div>
             </div>
-            <div class="legend-inline">
-                <div class="legend-item"><span class="legend-swatch swatch--default"></span>Unsorted</div>
-                <div class="legend-item"><span class="legend-swatch swatch--comparing"></span>Comparing</div>
-                <div class="legend-item"><span class="legend-swatch swatch--swapping"></span>Swapping</div>
-                <div class="legend-item"><span class="legend-swatch swatch--sorted"></span>Sorted</div>
-                <div class="legend-item"><span class="legend-swatch swatch--pivot"></span>Pivot</div>
-                <div class="legend-item"><span class="legend-swatch swatch--selected"></span>Active Range</div>
-                <div class="legend-item"><span class="legend-swatch swatch--bucket"></span>Bucket</div>
+            <div class="dock-footer">
+                <div class="message-bar" id="message-bar">
+                    Select an algorithm and click SORT to begin.
+                </div>
+                <div class="legend-inline">
+                    <div class="legend-item"><span class="legend-swatch swatch--default"></span>Unsorted</div>
+                    <div class="legend-item"><span class="legend-swatch swatch--comparing"></span>Comparing</div>
+                    <div class="legend-item"><span class="legend-swatch swatch--swapping"></span>Swapping</div>
+                    <div class="legend-item"><span class="legend-swatch swatch--sorted"></span>Sorted</div>
+                    <div class="legend-item"><span class="legend-swatch swatch--pivot"></span>Pivot</div>
+                    <div class="legend-item"><span class="legend-swatch swatch--selected"></span>Active Range</div>
+                    <div class="legend-item"><span class="legend-swatch swatch--bucket"></span>Bucket</div>
+                </div>
             </div>
         </div>
     </main>
 {% endblock %}
 
 {% block page_js %}
-    <script src="/static/js/sound.js"></script>
-    <script src="/static/js/renderer.js"></script>
-    <script src="/static/js/animator.js"></script>
-    <script src="/static/js/pseudocode.js"></script>
-    <script src="/static/js/controls.js"></script>
-    <script src="/static/js/app.js"></script>
+
+    <script src="/static/js/renderer.js?v=1.1"></script>
+    <script src="/static/js/animator.js?v=1.1"></script>
+    <script src="/static/js/pseudocode.js?v=1.1"></script>
+    <script src="/static/js/controls.js?v=1.1"></script>
+    <script src="/static/js/app.js?v=1.1"></script>
     <script>lucide.createIcons();</script>
 {% endblock %}
