@@ -46,18 +46,7 @@ const Animator = (() => {
         updateProgress();
         messageBar.textContent = step.message || '';
         
-        // Play sound effects if enabled
-        if (window.SoundPlayer && window.SoundPlayer.isEnabled()) {
-            // Find max value for normalization
-            const maxVal = Math.max(...step.array.map(i => i.val));
-            if (step.swapping && step.swapping.length > 0) {
-                const vals = step.swapping.map(idx => step.array[idx]?.val).filter(v => v !== undefined);
-                if (vals.length > 0) window.SoundPlayer.playSwap(vals[0], vals[1], maxVal);
-            } else if (step.comparing && step.comparing.length > 0) {
-                const vals = step.comparing.map(idx => step.array[idx]?.val).filter(v => v !== undefined);
-                if (vals.length > 0) window.SoundPlayer.playCompare(vals[0], vals[1], maxVal);
-            }
-        }
+
     }
 
     function updateStats(step) {
@@ -178,9 +167,7 @@ const Animator = (() => {
         // Update message with celebration
         messageBar.innerHTML = '<span class="msg-complete">Sorting complete!</span>';
         
-        if (window.SoundPlayer) {
-            window.SoundPlayer.playComplete();
-        }
+
 
         // Show Post-Sort actions after a short delay
         setTimeout(() => {

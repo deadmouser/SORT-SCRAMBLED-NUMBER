@@ -4,143 +4,109 @@
 {% block meta_desc %}Sort Scramble — Visualize, benchmark, and race sorting algorithms. Interactive DSA learning tool.{% endblock %}
 
 {% block page_css %}
-<link rel="stylesheet" href="/static/css/landing.css">
+<link rel="stylesheet" href="/static/css/landing.css?v=1.1">
 {% endblock %}
 
 {% block content %}
 <div class="landing">
+
+    <!-- Full Page Parallax Background -->
+    <div class="landing-bg"></div>
 
     <!-- ── HERO ──────────────────────────────────────────── -->
     <section class="hero">
         <div class="hero-glow"></div>
         <div class="hero-content">
             <div class="hero-badge">
-                <i data-lucide="sparkles" class="hero-badge-icon"></i>
-                <span>DSA Hackathon 2026</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="url(#sparkle-grad)" />
+                    <defs>
+                        <linearGradient id="sparkle-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#00F0FF" />
+                            <stop offset="1" stop-color="#7000FF" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>Enterprise Visualizer</span>
             </div>
+            
             <h1 class="hero-title">
-                <span class="hero-title-line">Sorting Algorithms,</span>
-                <span class="hero-title-gradient">Visualized.</span>
+                The Anatomy of <br/>
+                <span class="hero-title-italic">Sorting</span> Algorithms.
             </h1>
+            
             <p class="hero-subtitle">
-                Step through 6 sorting algorithms, benchmark performance across input patterns,
-                and race them side-by-side. Learn by seeing.
+                A definitive, interactive exploration of data structures and algorithms, 
+                designed for profound understanding and visual excellence.
             </p>
+            
             <div class="hero-actions">
-                <a href="/visualizer" class="btn btn--primary btn--lg">
-                    <i data-lucide="play" class="btn-icon"></i>
-                    Start Visualizing
-                </a>
-                <a href="/learn" class="btn btn--ghost btn--lg">
-                    <i data-lucide="book-open" class="btn-icon"></i>
-                    Learn Algorithms
+                <a href="/visualizer" class="cta-button primary" aria-label="Start Visualizer Application">
+            Start Visualizer
+            <i data-lucide="arrow-right"></i>
+        </a>
+                <a href="/learn" class="btn btn--ghost">
+                    <span class="btn-text">Study Theory</span>
                 </a>
             </div>
         </div>
 
-        <!-- Live Mini-Demo -->
-        <div class="hero-demo">
-            <div class="demo-label">
-                <i data-lucide="eye" class="demo-label-icon"></i>
-                <span>Live Preview — Bubble Sort</span>
-            </div>
-            <div class="demo-bars" id="demo-bars">
+        <div class="hero-visual">
+            <div class="demo-card">
+                <div class="demo-header">
+                    <div class="demo-title">Live Preview • Bubble Sort</div>
+                    <div class="demo-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
                 <!-- 15 bars rendered by mini-demo.js -->
+                <div class="demo-bars" id="demo-bars"></div>
             </div>
         </div>
     </section>
 
-    <!-- ── FEATURES ──────────────────────────────────────── -->
+    <!-- ── EDITORIAL FEATURES ────────────────────────────── -->
     <section class="features">
-        <div class="features-header">
-            <h2 class="section-title">Everything You Need</h2>
-            <p class="section-subtitle">Six tools to master sorting algorithms</p>
+        <div class="feature-row feature-row--reversed">
+            <div class="feature-text">
+                <div class="feature-number">01</div>
+                <h2 class="feature-title">Granular Mechanics</h2>
+                <p class="feature-desc">
+                    Step through each algorithm execution with unparalleled clarity. 
+                    Color-coding maps directly to synchronized pseudocode, revealing the exact 
+                    state of the array at every execution step.
+                </p>
+                <a href="/visualizer" class="feature-link">Explore Visualizer <span class="feature-arrow">→</span></a>
+            </div>
+            <div class="feature-image feature-image--visualizer"></div>
         </div>
-        <div class="features-grid">
-            <a href="/visualizer" class="feature-card">
-                <div class="feature-icon-wrap feature-icon--visualizer">
-                    <i data-lucide="bar-chart-2"></i>
-                </div>
-                <h3 class="feature-title">Visualizer</h3>
+
+        <div class="feature-row">
+            <div class="feature-text">
+                <div class="feature-number">02</div>
+                <h2 class="feature-title">Performance Optics</h2>
                 <p class="feature-desc">
-                    Step through each algorithm with color-coded bars, pseudocode highlighting,
-                    and live data structure panels.
+                    Compare execution metrics across massive datasets. Our dynamic benchmark 
+                    engine exposes exactly why no single algorithm dominates all scenarios, 
+                    using real-time line charts and data tables.
                 </p>
-                <span class="feature-link">
-                    Open Visualizer
-                    <i data-lucide="arrow-right" class="feature-arrow"></i>
-                </span>
-            </a>
-            <a href="/benchmark" class="feature-card">
-                <div class="feature-icon-wrap feature-icon--benchmark">
-                    <i data-lucide="zap"></i>
-                </div>
-                <h3 class="feature-title">Benchmark</h3>
+                <a href="/benchmark" class="feature-link">Run Benchmarks <span class="feature-arrow">→</span></a>
+            </div>
+            <div class="feature-image feature-image--benchmark"></div>
+        </div>
+        
+        <div class="feature-row feature-row--reversed">
+            <div class="feature-text">
+                <div class="feature-number">03</div>
+                <h2 class="feature-title">Theoretical Framework</h2>
                 <p class="feature-desc">
-                    Compare execution times across input patterns. See why no single algorithm
-                    is best for all cases.
+                    Master the foundational principles behind each algorithm. Access detailed 
+                    time/space complexity breakdowns, Python implementations, and a comprehensive 
+                    decision flowchart.
                 </p>
-                <span class="feature-link">
-                    Run Benchmark
-                    <i data-lucide="arrow-right" class="feature-arrow"></i>
-                </span>
-            </a>
-            <a href="/learn" class="feature-card">
-                <div class="feature-icon-wrap feature-icon--learn">
-                    <i data-lucide="book-open"></i>
-                </div>
-                <h3 class="feature-title">Learn</h3>
-                <p class="feature-desc">
-                    Algorithm explainer cards, a when-to-use flowchart, and real Python code
-                    side by side with pseudocode.
-                </p>
-                <span class="feature-link">
-                    Start Learning
-                    <i data-lucide="arrow-right" class="feature-arrow"></i>
-                </span>
-            </a>
-            <a href="/compare" class="feature-card">
-                <div class="feature-icon-wrap feature-icon--compare">
-                    <i data-lucide="git-compare"></i>
-                </div>
-                <h3 class="feature-title">Compare</h3>
-                <p class="feature-desc">
-                    Run two algorithms side by side on the same array and watch how they
-                    differ in real time.
-                </p>
-                <span class="feature-link">
-                    Compare Algorithms
-                    <i data-lucide="arrow-right" class="feature-arrow"></i>
-                </span>
-            </a>
-            <a href="/race" class="feature-card">
-                <div class="feature-icon-wrap feature-icon--race">
-                    <i data-lucide="flag"></i>
-                </div>
-                <h3 class="feature-title">Race</h3>
-                <p class="feature-desc">
-                    All 6 algorithms racing simultaneously. Watch the leaderboard unfold
-                    in real time.
-                </p>
-                <span class="feature-link">
-                    Start Race
-                    <i data-lucide="arrow-right" class="feature-arrow"></i>
-                </span>
-            </a>
-            <a href="/visualizer" class="feature-card">
-                <div class="feature-icon-wrap feature-icon--analysis">
-                    <i data-lucide="file-bar-chart"></i>
-                </div>
-                <h3 class="feature-title">Post-Sort Analysis</h3>
-                <p class="feature-desc">
-                    After each sort, get a full complexity breakdown: Big-O analysis,
-                    performance rating, and stability report.
-                </p>
-                <span class="feature-link">
-                    Try Analysis
-                    <i data-lucide="arrow-right" class="feature-arrow"></i>
-                </span>
-            </a>
+                <a href="/learn" class="feature-link">Study Theory <span class="feature-arrow">→</span></a>
+            </div>
+            <div class="feature-image feature-image--learn"></div>
         </div>
     </section>
 
@@ -193,7 +159,7 @@
                 </svg>
                 <span>Sort Scramble</span>
             </div>
-            <span class="footer-text">Built for DSA Hackathon 2026</span>
+            <span class="footer-text">Built for Interactive DSA Education</span>
         </div>
     </footer>
 
@@ -201,5 +167,5 @@
 {% endblock %}
 
 {% block page_js %}
-<script src="/static/js/mini-demo.js"></script>
+<script src="/static/js/mini-demo.js?v=1.1"></script>
 {% endblock %}

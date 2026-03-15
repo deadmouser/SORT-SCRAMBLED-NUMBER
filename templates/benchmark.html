@@ -4,12 +4,14 @@
 {% block meta_desc %}Benchmark 6 sorting algorithms across input patterns. Compare execution time, comparisons, and swaps.{% endblock %}
 
 {% block page_css %}
-<link rel="stylesheet" href="/static/css/benchmark.css">
+<link rel="stylesheet" href="/static/css/benchmark.css?v=1.1">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 {% endblock %}
 
 {% block content %}
 <div class="page-container">
+    <!-- Full Page Parallax Background -->
+    <div class="benchmark-bg"></div>
 
     <!-- Page Header -->
     <div class="page-header">
@@ -189,5 +191,5 @@
 {% endblock %}
 
 {% block page_js %}
-<script src="/static/js/benchmark.js"></script>
+<script src="/static/js/benchmark.js?v=1.1"></script>
 {% endblock %}

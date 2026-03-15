@@ -11,10 +11,8 @@ const Controls = (() => {
     const btnStepFwd   = document.getElementById('btn-step-fwd');
     const btnStepBack  = document.getElementById('btn-step-back');
     const btnRandom    = document.getElementById('btn-random');
-    const btnSound     = document.getElementById('btn-sound');
     const btnReplay    = document.getElementById('btn-replay');
-    const soundIconOff = document.getElementById('sound-icon-off');
-    const soundIconOn  = document.getElementById('sound-icon-on');
+
     const sizeSlider   = document.getElementById('size-slider');
     const sizeValue    = document.getElementById('size-value');
     const speedSlider  = document.getElementById('speed-slider');
@@ -69,18 +67,7 @@ const Controls = (() => {
         btnStepFwd.addEventListener('click', () => Animator.stepForward());
         btnStepBack.addEventListener('click', () => Animator.stepBack());
         
-        if (btnSound) {
-            btnSound.addEventListener('click', () => {
-                const enabled = window.SoundPlayer ? window.SoundPlayer.toggle() : false;
-                if (enabled) {
-                    soundIconOff.style.display = 'none';
-                    soundIconOn.style.display = '';
-                } else {
-                    soundIconOff.style.display = '';
-                    soundIconOn.style.display = 'none';
-                }
-            });
-        }
+
 
         if (btnReplay) {
             btnReplay.addEventListener('click', () => {

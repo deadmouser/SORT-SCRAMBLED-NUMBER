@@ -1,5 +1,9 @@
 import time
 from flask import Flask, render_template, request, jsonify
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from algorithms import ALGO_INFO
 
 # -- Import algorithm step generators -----------------------------------------
@@ -115,14 +119,26 @@ def info():
 @app.route("/api/sort", methods=["POST"])
 def sort():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON payload"}), 400
+
     algo = data.get("algorithm", "bubble")
     arr = data.get("array", [])
+
+    if not isinstance(arr, list) or not all(isinstance(x, (int, float)) for x in arr):
+        return jsonify({"error": "Array must be a list of numbers"}), 400
+
+    if len(arr) > 1000:
+        return jsonify({"error": "Array size exceeds maximum limit of 1000"}), 400
 
     step_fn = ALGORITHMS.get(algo)
     if step_fn is None:
         steps = mock_steps(arr)
     else:
-        steps = step_fn(arr)
+        try:
+            steps = step_fn(arr)
+        except Exception as e:
+            return jsonify({"error": f"Algorithm execution failed: {str(e)}"}), 500
 
     return jsonify({"steps": steps, "info": ALGO_INFO.get(algo, {})})
 
@@ -131,9 +147,16 @@ def sort():
 def api_benchmark():
     """Run benchmark across all algorithms for a given array size and pattern."""
     data = request.get_json()
-    size = min(int(data.get("size", 50)), 1000)
+    if not data:
+        return jsonify({"error": "Invalid JSON payload"}), 400
+
+    try:
+        size = min(int(data.get("size", 50)), 1000)
+        iterations = min(int(data.get("iterations", 50)), 100)
+    except (ValueError, TypeError):
+        return jsonify({"error": "Size and iterations must be valid integers"}), 400
+
     pattern = data.get("pattern", "random")
-    iterations = min(int(data.get("iterations", 50)), 100)
 
     import random
 
@@ -203,4 +226,6 @@ def page_not_found(e):
 # -- Run -----------------------------------------------------------------------
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    debug_mode = os.getenv("FLASK_DEBUG", "True").lower() in ("true", "1", "t")
+    port = int(os.getenv("PORT", 5000))
+    app.run(debug=debug_mode, port=port)
