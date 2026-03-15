@@ -57,10 +57,13 @@
 
         // Start Comparison
         btnCompare.addEventListener('click', async () => {
-            const arr = parseArrayInput(arrayInput.value);
+            let arr = parseArrayInput(arrayInput.value);
+            
+            // Auto-generate if empty to avoid fetch errors and improve UX
             if (arr.length === 0) {
-                alert('Please enter a valid array of numbers.');
-                return;
+                const randomArr = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100) + 1);
+                arrayInput.value = randomArr.join(', ');
+                arr = randomArr;
             }
 
             const algo1 = algo1Select.value;

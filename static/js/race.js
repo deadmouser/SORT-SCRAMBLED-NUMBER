@@ -102,7 +102,8 @@
 
                     if (statusEl) {
                         statusEl.textContent = 'Waiting...';
-                        statusEl.className = ''; // Reset any rank colors
+                        statusEl.className = 'race-panel-status'; // Reset any rank classes
+                        statusEl.style.color = ''; // Fix color reset bug
                     }
                     if (progressEl) progressEl.style.width = '0%';
                     if (barsEl) barsEl.innerHTML = '';
