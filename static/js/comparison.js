@@ -197,14 +197,16 @@
             if (currentStep >= maxSteps - 1) return; // Already at end
 
             isPlaying = true;
-            btnPlay.textContent = '⏸ Pause';
+            btnPlay.innerHTML = '<i data-lucide="pause" style="width:18px;height:18px"></i>';
+            if (window.lucide) window.lucide.createIcons();
             lastTimestamp = performance.now();
             animationId = requestAnimationFrame(autoPlayLoop);
         }
 
         function stopAutoPlay() {
             isPlaying = false;
-            btnPlay.textContent = '▶ Play';
+            btnPlay.innerHTML = '<i data-lucide="play" style="width:18px;height:18px"></i>';
+            if (window.lucide) window.lucide.createIcons();
             if (animationId) {
                 cancelAnimationFrame(animationId);
                 animationId = null;
