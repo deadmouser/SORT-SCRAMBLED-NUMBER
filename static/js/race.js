@@ -236,13 +236,13 @@
                 
                 leaderboard.forEach((entry) => {
                     const li = document.createElement('li');
-                    
-                    // Style list items with flexbox for leaderboard appearance
+                    li.className = 'leaderboard-entry'; // Matches .race-leaderboard li style automatically
+
+                    // Use flexbox already defined in CSS for .race-leaderboard li
                     li.style.display = 'flex';
                     li.style.justifyContent = 'space-between';
                     li.style.alignItems = 'center';
-                    li.style.padding = '10px';
-                    li.style.borderBottom = '1px solid #333';
+                    li.style.padding = '12px 16px';
                     
                     const nameSpan = document.createElement('span');
                     nameSpan.innerHTML = `<strong>${entry.rank}</strong> - ${entry.name}`;

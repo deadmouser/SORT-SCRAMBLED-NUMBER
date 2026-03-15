@@ -1,1 +1,190 @@
-/* Race page styles — populated Day 3 */
+/* 
+ * race.css
+ * Part of the Sort Scramble Visualization Engine.
+ */
+
+.page-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Controls Header Area */
+.race-controls {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 300px;
+}
+
+.slider-with-value {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.slider-with-value .slider {
+    flex: 1;
+}
+
+.slider-value {
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--primary);
+    background: rgba(0, 123, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+}
+
+/* 3x2 Grid for Race Panels */
+.race-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.race-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.race-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    border-color: var(--border-hover, #4b5563);
+}
+
+.race-panel-header {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.race-panel-name {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.race-panel-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+.race-panel-status {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Visualization Block */
+.race-panel-bars {
+    height: 140px;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    background: var(--bg);
+    position: relative;
+}
+
+.bar {
+    width: 100%;
+    max-width: 15px; /* Smaller than standard visualizer */
+    background-color: var(--bar-default, #4b5563);
+    border-radius: 2px 2px 0 0;
+    transition: height 0.05s linear; /* Fast transitions for racing */
+}
+
+.bar[data-state="comparing"] { background-color: var(--warning, #f59e0b); }
+.bar[data-state="swapping"] { background-color: var(--danger, #ef4444); }
+.bar[data-state="sorted"] { background-color: var(--success, #10b981); }
+
+/* Progress Completion Bar */
+.race-panel-progress {
+    height: 6px;
+    width: 100%;
+    background: var(--border);
+}
+
+.race-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.1s linear;
+}
+
+/* Final Results Leaderboard */
+.race-results {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.race-leaderboard {
+    margin-top: 1rem;
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.race-leaderboard li {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+}
+
+/* Responsive Scaling */
+@media (max-width: 1100px) {
+    .race-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .race-controls {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+    .race-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+    }
+}
