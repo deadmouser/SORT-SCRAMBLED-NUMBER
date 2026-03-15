@@ -24,8 +24,11 @@
         // Output Panels
         const leftBars = document.getElementById('compare-left-bars');
         const leftStats = document.getElementById('compare-left-stats');
+        const leftTitle = document.getElementById('panel-left-name');
+        
         const rightBars = document.getElementById('compare-right-bars');
         const rightStats = document.getElementById('compare-right-stats');
+        const rightTitle = document.getElementById('panel-right-name');
 
         // State
         let currentStep = 0;
@@ -84,6 +87,10 @@
 
                 leftSteps = res1.steps || [];
                 rightSteps = res2.steps || [];
+                
+                // Update Panel Titles
+                leftTitle.textContent = res1.info ? res1.info.name : algo1.toUpperCase();
+                rightTitle.textContent = res2.info ? res2.info.name : algo2.toUpperCase();
 
                 transportContainer.style.display = 'flex';
                 updateRender();
