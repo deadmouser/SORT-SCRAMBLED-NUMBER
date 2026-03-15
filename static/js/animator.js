@@ -19,6 +19,11 @@ const Animator = (() => {
     const statComparisons = document.getElementById('stat-comparisons');
     const statSwaps  = document.getElementById('stat-swaps');
     const statStep   = document.getElementById('stat-step');
+    const postSortOverlay = document.getElementById('post-sort-overlay');
+    const psAlgoName = document.getElementById('ps-algo-name');
+    const psArraySize = document.getElementById('ps-array-size');
+    const psComparisons = document.getElementById('ps-comparisons');
+    const psSwaps = document.getElementById('ps-swaps');
 
     // ── Core ────────────────────────────────────────────────
     function loadSteps(newSteps) {
@@ -40,6 +45,19 @@ const Animator = (() => {
         updateStats(step);
         updateProgress();
         messageBar.textContent = step.message || '';
+        
+        // Play sound effects if enabled
+        if (window.SoundPlayer && window.SoundPlayer.isEnabled()) {
+            // Find max value for normalization
+            const maxVal = Math.max(...step.array.map(i => i.val));
+            if (step.swapping && step.swapping.length > 0) {
+                const vals = step.swapping.map(idx => step.array[idx]?.val).filter(v => v !== undefined);
+                if (vals.length > 0) window.SoundPlayer.playSwap(vals[0], vals[1], maxVal);
+            } else if (step.comparing && step.comparing.length > 0) {
+                const vals = step.comparing.map(idx => step.array[idx]?.val).filter(v => v !== undefined);
+                if (vals.length > 0) window.SoundPlayer.playCompare(vals[0], vals[1], maxVal);
+            }
+        }
     }
 
     function updateStats(step) {
@@ -130,6 +148,7 @@ const Animator = (() => {
         pause();
         clearCelebration();
         document.body.classList.remove('is-sorting');
+        if (postSortOverlay) postSortOverlay.classList.remove('is-visible');
         index = 0;
         if (steps.length > 0) {
             renderCurrent();
@@ -158,6 +177,27 @@ const Animator = (() => {
 
         // Update message with celebration
         messageBar.innerHTML = '<span class="msg-complete">Sorting complete!</span>';
+        
+        if (window.SoundPlayer) {
+            window.SoundPlayer.playComplete();
+        }
+
+        // Show Post-Sort actions after a short delay
+        setTimeout(() => {
+            if (postSortOverlay && steps.length > 0) {
+                const finalStep = steps[steps.length - 1];
+                const stats = finalStep.stats || { comparisons: 0, swaps: 0 };
+                
+                // Populate stats
+                const algoName = document.getElementById('algo-title')?.textContent || 'Algorithm';
+                if (psAlgoName) psAlgoName.textContent = algoName;
+                if (psArraySize) psArraySize.textContent = finalStep.array.length;
+                if (psComparisons) psComparisons.textContent = stats.comparisons;
+                if (psSwaps) psSwaps.textContent = stats.swaps;
+
+                postSortOverlay.classList.add('is-visible');
+            }
+        }, 1200); // Wait for the glow cascade to finish
     }
 
     function clearCelebration() {

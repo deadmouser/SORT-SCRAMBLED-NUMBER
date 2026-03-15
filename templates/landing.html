@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block meta_desc %}Sort Scramble — Visualize, benchmark, and race sorting algorithms. Interactive DSA learning tool.{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block content %}
+<div class="landing">
+
+    <!-- ── HERO ──────────────────────────────────────────── -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i data-lucide="sparkles" class="hero-badge-icon"></i>
+                <span>DSA Hackathon 2026</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="hero-title-line">Sorting Algorithms,</span>
+                <span class="hero-title-gradient">Visualized.</span>
+            </h1>
+            <p class="hero-subtitle">
+                Step through 6 sorting algorithms, benchmark performance across input patterns,
+                and race them side-by-side. Learn by seeing.
+            </p>
+            <div class="hero-actions">
+                <a href="/visualizer" class="btn btn--primary btn--lg">
+                    <i data-lucide="play" class="btn-icon"></i>
+                    Start Visualizing
+                </a>
+                <a href="/learn" class="btn btn--ghost btn--lg">
+                    <i data-lucide="book-open" class="btn-icon"></i>
+                    Learn Algorithms
+                </a>
+            </div>
+        </div>
+
+        <!-- Live Mini-Demo -->
+        <div class="hero-demo">
+            <div class="demo-label">
+                <i data-lucide="eye" class="demo-label-icon"></i>
+                <span>Live Preview — Bubble Sort</span>
+            </div>
+            <div class="demo-bars" id="demo-bars">
+                <!-- 15 bars rendered by mini-demo.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FEATURES ──────────────────────────────────────── -->
+    <section class="features">
+        <div class="features-header">
+            <h2 class="section-title">Everything You Need</h2>
+            <p class="section-subtitle">Six tools to master sorting algorithms</p>
+        </div>
+        <div class="features-grid">
+            <a href="/visualizer" class="feature-card">
+                <div class="feature-icon-wrap feature-icon--visualizer">
+                    <i data-lucide="bar-chart-2"></i>
+                </div>
+                <h3 class="feature-title">Visualizer</h3>
+                <p class="feature-desc">
+                    Step through each algorithm with color-coded bars, pseudocode highlighting,
+                    and live data structure panels.
+                </p>
+                <span class="feature-link">
+                    Open Visualizer
+                    <i data-lucide="arrow-right" class="feature-arrow"></i>
+                </span>
+            </a>
+            <a href="/benchmark" class="feature-card">
+                <div class="feature-icon-wrap feature-icon--benchmark">
+                    <i data-lucide="zap"></i>
+                </div>
+                <h3 class="feature-title">Benchmark</h3>
+                <p class="feature-desc">
+                    Compare execution times across input patterns. See why no single algorithm
+                    is best for all cases.
+                </p>
+                <span class="feature-link">
+                    Run Benchmark
+                    <i data-lucide="arrow-right" class="feature-arrow"></i>
+                </span>
+            </a>
+            <a href="/learn" class="feature-card">
+                <div class="feature-icon-wrap feature-icon--learn">
+                    <i data-lucide="book-open"></i>
+                </div>
+                <h3 class="feature-title">Learn</h3>
+                <p class="feature-desc">
+                    Algorithm explainer cards, a when-to-use flowchart, and real Python code
+                    side by side with pseudocode.
+                </p>
+                <span class="feature-link">
+                    Start Learning
+                    <i data-lucide="arrow-right" class="feature-arrow"></i>
+                </span>
+            </a>
+            <a href="/compare" class="feature-card">
+                <div class="feature-icon-wrap feature-icon--compare">
+                    <i data-lucide="git-compare"></i>
+                </div>
+                <h3 class="feature-title">Compare</h3>
+                <p class="feature-desc">
+                    Run two algorithms side by side on the same array and watch how they
+                    differ in real time.
+                </p>
+                <span class="feature-link">
+                    Compare Algorithms
+                    <i data-lucide="arrow-right" class="feature-arrow"></i>
+                </span>
+            </a>
+            <a href="/race" class="feature-card">
+                <div class="feature-icon-wrap feature-icon--race">
+                    <i data-lucide="flag"></i>
+                </div>
+                <h3 class="feature-title">Race</h3>
+                <p class="feature-desc">
+                    All 6 algorithms racing simultaneously. Watch the leaderboard unfold
+                    in real time.
+                </p>
+                <span class="feature-link">
+                    Start Race
+                    <i data-lucide="arrow-right" class="feature-arrow"></i>
+                </span>
+            </a>
+            <a href="/visualizer" class="feature-card">
+                <div class="feature-icon-wrap feature-icon--analysis">
+                    <i data-lucide="file-bar-chart"></i>
+                </div>
+                <h3 class="feature-title">Post-Sort Analysis</h3>
+                <p class="feature-desc">
+                    After each sort, get a full complexity breakdown: Big-O analysis,
+                    performance rating, and stability report.
+                </p>
+                <span class="feature-link">
+                    Try Analysis
+                    <i data-lucide="arrow-right" class="feature-arrow"></i>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ── ALGORITHMS STRIP ──────────────────────────────── -->
+    <section class="algo-strip">
+        <div class="algo-strip-inner">
+            <div class="algo-chip">
+                <span class="algo-chip-num">01</span>
+                <span class="algo-chip-name">Bubble Sort</span>
+                <span class="algo-chip-tag">O(n^2)</span>
+            </div>
+            <div class="algo-chip">
+                <span class="algo-chip-num">02</span>
+                <span class="algo-chip-name">Selection Sort</span>
+                <span class="algo-chip-tag">O(n^2)</span>
+            </div>
+            <div class="algo-chip">
+                <span class="algo-chip-num">03</span>
+                <span class="algo-chip-name">Insertion Sort</span>
+                <span class="algo-chip-tag">O(n^2)</span>
+            </div>
+            <div class="algo-chip">
+                <span class="algo-chip-num">04</span>
+                <span class="algo-chip-name">Merge Sort</span>
+                <span class="algo-chip-tag">O(n log n)</span>
+            </div>
+            <div class="algo-chip">
+                <span class="algo-chip-num">05</span>
+                <span class="algo-chip-name">Quick Sort</span>
+                <span class="algo-chip-tag">O(n log n)</span>
+            </div>
+            <div class="algo-chip">
+                <span class="algo-chip-num">06</span>
+                <span class="algo-chip-name">Radix Sort</span>
+                <span class="algo-chip-tag">O(nk)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ────────────────────────────────────────── -->
+    <footer class="landing-footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
+                    <rect width="32" height="32" rx="4" fill="#12141B"/>
+                    <rect x="4" y="20" width="4" height="8" fill="#8B5CF6" rx="1"/>
+                    <rect x="10" y="14" width="4" height="14" fill="#06B6D4" rx="1"/>
+                    <rect x="16" y="8" width="4" height="20" fill="#5E6AD2" rx="1"/>
+                    <rect x="22" y="4" width="4" height="24" fill="#22C55E" rx="1"/>
+                </svg>
+                <span>Sort Scramble</span>
+            </div>
+            <span class="footer-text">Built for DSA Hackathon 2026</span>
+        </div>
+    </footer>
+
+</div>
+{% endblock %}
+
+{% block page_js %}
+<script src="/static/js/mini-demo.js"></script>
+{% endblock %}
