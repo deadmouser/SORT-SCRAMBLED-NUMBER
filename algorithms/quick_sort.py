@@ -2,6 +2,14 @@
 
 
 def generate_steps(arr):
+    """Generates step-by-step state snapshots for algorithm visualization.
+
+    Args:
+        arr (list[int]): The input array of integers to sort.
+
+    Returns:
+        list[dict]: A list of dictionary objects representing the state at each step.
+    """
     """Generates step-by-step states for Quick Sort."""
     a = arr.copy()
     n = len(a)

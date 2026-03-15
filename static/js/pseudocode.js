@@ -1,3 +1,8 @@
+/**
+ * pseudocode.js
+ * Part of the Sort Scramble Visualization Engine.
+ */
+
 /* ═══════════════════════════════════════════════════════════════
    pseudocode.js — Pseudocode panel with real-time line highlighting
    Inspired by VisuAlgo's code synchronization
@@ -203,3 +208,4 @@ const Pseudocode = (() => {
 
     return { render, setAlgorithm, updateFromStep };
 })();
+

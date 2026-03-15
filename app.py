@@ -1,5 +1,9 @@
+import os
 import time
 from flask import Flask, render_template, request, jsonify
+
+# Configuration and Modules
+from config.settings import config
 from algorithms import ALGO_INFO
 
 # -- Import algorithm step generators -----------------------------------------
@@ -36,6 +40,7 @@ except ImportError:
 
 # -- Flask App ----------------------------------------------------------------
 app = Flask(__name__)
+app.config.from_object(config)
 
 ALGORITHMS = {
     "bubble": bubble_steps,
@@ -114,7 +119,11 @@ def info():
 
 @app.route("/api/sort", methods=["POST"])
 def sort():
-    data = request.get_json()
+    """
+    Endpoint to fetch algorithm steps for visualization based on the requested algorithm.
+    Includes basic validation to prevent unhandled AttributeError crashes.
+    """
+    data = request.get_json(silent=True) or {}
     algo = data.get("algorithm", "bubble")
     arr = data.get("array", [])
 
@@ -159,23 +168,25 @@ def api_benchmark():
         if step_fn is None:
             continue
 
-        times = []
+        times: list[float] = []
         last_steps = None
         for _ in range(iterations):
-            copy = arr[:]
+            copy_arr = list(arr)
             start = time.perf_counter()
-            steps = step_fn(copy)
-            elapsed = (time.perf_counter() - start) * 1000  # ms
+            steps = step_fn(copy_arr)
+            elapsed = (time.perf_counter() - start) * 1000.0  # ms
             times.append(elapsed)
             last_steps = steps
 
         final_stats = last_steps[-1]["stats"] if last_steps else {}
+        avg_ms = sum(times) / len(times) if times else 0.0
+        
         results.append({
             "algorithm": algo_name,
             "name": ALGO_INFO.get(algo_name, {}).get("name", algo_name),
-            "avg_ms": round(sum(times) / len(times), 3),
-            "min_ms": round(min(times), 3),
-            "max_ms": round(max(times), 3),
+            "avg_ms": round(float(avg_ms), 3),
+            "min_ms": round(float(min(times)), 3) if times else 0.0,
+            "max_ms": round(float(max(times)), 3) if times else 0.0,
             "comparisons": final_stats.get("comparisons", 0),
             "swaps": final_stats.get("swaps", 0),
             "steps": len(last_steps) if last_steps else 0,
@@ -203,4 +214,9 @@ def page_not_found(e):
 # -- Run -----------------------------------------------------------------------
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # ---------------------------------------------------------
+    # SECURE DEPLOYMENT NOTE:
+    # Port mapping and debug execution defaults are safely
+    # inherited from the application config mapping context.
+    # ---------------------------------------------------------
+    app.run(debug=app.config["DEBUG"], port=app.config["PORT"])

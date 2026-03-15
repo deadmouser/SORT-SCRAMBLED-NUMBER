@@ -1,3 +1,8 @@
+/**
+ * animator.js
+ * Part of the Sort Scramble Visualization Engine.
+ */
+
 /* ═══════════════════════════════════════════════════════════════
    animator.js — Plays back pre-computed Step arrays
    with completion celebration effects
@@ -237,3 +242,4 @@ const Animator = (() => {
         hasSteps
     };
 })();
+
