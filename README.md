@@ -23,7 +23,7 @@ Sort Scramble is an interactive sorting algorithm visualizer built with Flask an
 
 | Landing Page | Interactive Learning |
 |:---:|:---:|
-| ![Landing Page](screenshots/landing.png) | ![Learn](screenshots/learn.png) |
+ | ![Learn](screenshots/learn.png) |
 | **Visualizer Dashboard** | **Algorithm Benchmark** |
 | ![Bubble Sort](screenshots/bubble_sort.png) | ![Benchmark](screenshots/benchmark.png) | 
 | **Algorithm Comparison** | **Algorithm Race Mode** |
